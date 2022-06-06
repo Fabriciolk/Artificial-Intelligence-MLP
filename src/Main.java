@@ -29,14 +29,14 @@ public class Main
             charactersData.shuffleAll();
 
             NeuralNetworkTraining neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, charactersData);
+            neuralNetworkTraining.setLearningRate(5);
             neuralNetworkTraining.start(2000);
 
             datasetToTest = new CharactersData(pathFileTest, 0.0);
             datasetToTest.shuffleAll();
 
             acertos[i] = neuralNetwork.countRightAnswers(datasetToTest, 0.5);
+            System.out.printf("Acertos para rede neural %s: %d/%d\n", neuralNetwork.getNeuronsByLayerLabel(), acertos[i], datasetToTest.getDataLength());
         }
-
-        for (int i = 0; i < acertos.length; i++) System.out.printf("Acertos para %d neuroônios: %d/%d", i + 1, acertos[i], datasetToTest.getDataLength());
     }
 }
