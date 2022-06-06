@@ -18,6 +18,14 @@ public class NeuralNetworkTraining
     private TrainingDataset trainingDataSet;
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
+    private boolean writeResultsOnCSVFileEnabled = false;
+
+    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, TrainingDataset trainingDataSet, boolean writeResultsOnCSVFileEnabled)
+    {
+        this.neuralNetwork = neuralNetwork;
+        this.trainingDataSet = trainingDataSet;
+        this.writeResultsOnCSVFileEnabled = writeResultsOnCSVFileEnabled;
+    }
 
     public NeuralNetworkTraining(NeuralNetwork neuralNetwork, TrainingDataset trainingDataSet)
     {
@@ -75,7 +83,7 @@ public class NeuralNetworkTraining
                 if (stopOnNextEpoch) break;
             }
 
-            resultManager.exportCSVFile();
+            if (writeResultsOnCSVFileEnabled) resultManager.exportCSVFile();
         }
         catch (Exception e)
         {
