@@ -4,6 +4,12 @@ import Function.ActivationFunction;
 
 public class Layer
 {
+    /*
+    *  Esta classe é responsável por uma camada de neurônios
+    *  na estrura de dados da rede neural.
+    *
+    * */
+
     private Neuron[] neurons;
     private boolean isEntryLayer = false;
 
@@ -20,12 +26,18 @@ public class Layer
         for (int i = 0; i < neurons.length; i++) neurons[i] = new Neuron();
     }
 
+    // Este método recebe um vetor de entradas e as utiliza
+    // para definir a entrada de cada neurônio.
     public void setInputs(double[] inputs)
     {
         if (inputs.length != neurons.length) return;
         for (int i = 0; i < inputs.length; i++) neurons[i].setLastInputReceived(inputs[i]);
     }
 
+    // Este método retorna as saídas da camada utilizando
+    // a função de ativação. Obs.: se a camada for de entrada
+    // na rede neural, será retornado a mesma entrada que o
+    // neurônio recebeu.
     public double[] getOutputs()
     {
         double[] outputs = new double[neurons.length];
@@ -33,10 +45,13 @@ public class Layer
         return outputs;
     }
 
+    // Este método retorna o vetor de neurônios.
     public Neuron[] getNeurons() {
         return neurons;
     }
 
+    // Este método retorna um booleano indicando
+    // se a camada é de entrada ou não.
     public boolean isEntryLayer() {
         return isEntryLayer;
     }

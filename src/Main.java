@@ -1,27 +1,42 @@
 import Function.ArcTan.ArcTangentFunction;
-import Function.Sigmoid.SigmoidFunction;
 import NeuralNetwork.Data.CharactersData;
-import NeuralNetwork.Data.TrainingDataSet;
+import NeuralNetwork.Data.TrainingDataset;
 import NeuralNetwork.DataStructure.Layer;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 import NeuralNetwork.Learning.NeuralNetworkTraining;
 
+import java.io.File;
+
 public class Main
 {
+    private static String pathFileTrain = "dataset" + File.separator + "caracteres-ruido e limpo-fabricio.csv";
+    private static String pathFileTest = "dataset" + File.separator + "caracteres_ruido20.csv";
+
+    static TrainingDataset charactersData;
+    static TrainingDataset datasetToTest;
+
     public static void main(String[] args)
     {
-        NeuralNetwork neuralNetwork = new NeuralNetwork(63);
-        neuralNetwork.addLayer(new Layer(4, new SigmoidFunction()));
-        neuralNetwork.addLayer(new Layer(7, new SigmoidFunction()));
+        int[] acertos = new int[100];
 
-        TrainingDataSet charactersData = new CharactersData("C:\\Users\\fabri\\Documents\\USP\\Trabalhos_e_Atividades\\2022\\IA\\EP\\Data\\caracteres-limpo.csv");
+        for (int i = 0; i < acertos.length; i++)
+        {
+            NeuralNetwork neuralNetwork = new NeuralNetwork(63);
+            neuralNetwork.addLayer(new Layer(i + 1, new ArcTangentFunction()));
+            neuralNetwork.addLayer(new Layer(7, new ArcTangentFunction()));
 
-        NeuralNetworkTraining neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, charactersData);
-        neuralNetworkTraining.start(1);
+            charactersData = new CharactersData(pathFileTrain, 0.3);
+            charactersData.shuffleAll();
 
-        //double[] outputs = neuralNetwork.classifyData(new double[] {-1,-1});
+            NeuralNetworkTraining neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, charactersData);
+            neuralNetworkTraining.start(2000);
 
-        System.out.println();
-        //for (int i = 0; i < outputs.length; i++) System.out.printf("%.1f \t", outputs[i]);
+            datasetToTest = new CharactersData(pathFileTest, 0.0);
+            datasetToTest.shuffleAll();
+
+            acertos[i] = neuralNetwork.countRightAnswers(datasetToTest, 0.5);
+        }
+
+        for (int i = 0; i < acertos.length; i++) System.out.printf("Acertos para %d neuroônios: %d/%d", i + 1, acertos[i], datasetToTest.getDataLength());
     }
 }

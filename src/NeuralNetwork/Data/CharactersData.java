@@ -6,14 +6,21 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class CharactersData implements TrainingDataSet
+public class CharactersData implements TrainingDataset
 {
+    Random random = new Random();
     LinkedList<double[]> dataList = new LinkedList<>();
     LinkedList<double[]> classDataList = new LinkedList<>();
-    int numberOfDataRead = 0;
 
-    public CharactersData(String fileName)
+    LinkedList<double[]> validationDataList = new LinkedList<>();
+    LinkedList<double[]> validationClassDataList = new LinkedList<>();
+    int numberOfDataRead = 0;
+    int numberOfValidationDataRead = 0;
+
+    public CharactersData(String fileName, double validationDataPercent)
     {
+        if (validationDataPercent < 0.0 || validationDataPercent > 1.0) return;
+
         try{
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
             String line = bufferedReader.readLine();
@@ -21,7 +28,11 @@ public class CharactersData implements TrainingDataSet
             while (line != null)
             {
                 String[] stringValues = line.split(",");
-                double[] floatValues = new double[stringValues.length - 7];
+                for (int i = 0; i < stringValues.length; i++)
+                {
+                    stringValues[i] = stringValues[i].replace("\"", "");
+                }
+                double[] floatValues = new double[63];
                 double[] floatClass = new double[7];
 
                 for (int i = 0; i < floatValues.length; i++)
@@ -53,37 +64,78 @@ public class CharactersData implements TrainingDataSet
         {
             e.printStackTrace();
         }
+
+        for (int i = 0; i < Math.round(dataList.size() * validationDataPercent); i++)
+        {
+            int randomIndex = random.nextInt(dataList.size());
+            validationDataList.add(dataList.remove(randomIndex));
+            validationClassDataList.add(classDataList.remove(randomIndex));
+        }
     }
 
     @Override
-    public Data getNextData() {
+    public Data getNextTrainingData() {
         Data data = new Data(dataList.get(numberOfDataRead), classDataList.get(numberOfDataRead));
         numberOfDataRead++;
         return data;
     }
 
     @Override
-    public boolean gotAllData() {
-        boolean gotAll = numberOfDataRead == dataList.size();
-        if (gotAll) numberOfDataRead = 0;
-        return gotAll;
+    public Data getNextValidationData() {
+        Data data = new Data(validationDataList.get(numberOfValidationDataRead), validationClassDataList.get(numberOfValidationDataRead));
+        numberOfValidationDataRead++;
+        return data;
     }
 
     @Override
-    public void shuffleAllData() {
-        Random random = new Random();
+    public boolean gotAllTrainingData() {
+        return numberOfDataRead == dataList.size();
+    }
+
+    @Override
+    public void resetDataRead() {
+        numberOfDataRead = 0;
+    }
+
+    @Override
+    public boolean gotAllValidationData() {
+        return numberOfValidationDataRead == validationDataList.size();
+    }
+
+    @Override
+    public void resetValidationDataRead() {
+        numberOfValidationDataRead = 0;
+    }
+
+    @Override
+    public void shuffleAll() {
         LinkedList<double[]> newDataList = new LinkedList<>();
         LinkedList<double[]> newClassDataList = new LinkedList<>();
 
-        for (int i = 0; i < dataList.size(); i++)
+        for (int i = 0; i < dataList.size() + i; i++)
         {
-            int randomIndex = random.nextInt(dataList.size() - i);
+            int randomIndex = random.nextInt(dataList.size());
             newDataList.add(dataList.remove(randomIndex));
             newClassDataList.add(classDataList.remove(randomIndex));
         }
 
         dataList = newDataList;
         classDataList = newClassDataList;
+
+        ///////
+
+        LinkedList<double[]> newDataList2 = new LinkedList<>();
+        LinkedList<double[]> newClassDataList2 = new LinkedList<>();
+
+        for (int i = 0; i < validationDataList.size() + i; i++)
+        {
+            int randomIndex = random.nextInt(validationDataList.size());
+            newDataList2.add(validationDataList.remove(randomIndex));
+            newClassDataList2.add(validationClassDataList.remove(randomIndex));
+        }
+
+        validationDataList = newDataList2;
+        validationClassDataList = newClassDataList2;
     }
 
     @Override

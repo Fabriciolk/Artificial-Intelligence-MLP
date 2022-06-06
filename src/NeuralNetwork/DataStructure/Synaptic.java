@@ -5,6 +5,22 @@ import java.util.Random;
 
 public class Synaptic
 {
+    /* Esta classe é responsável por uma única sinapse. Ela
+     * enxerga as camadas à sua volta (de origem e destino)
+     * e contém os pesos e baias necessários para gerar os re-
+     * sultados para a camada de destino.
+     *
+     *    +---------+                    +---------+
+     *    |         |   +------------+   |         |
+     *    |  Origin |   |            |   | Destiny |
+     *    |         |   |  Synaptic  |   |         |
+     *    |  Layer  |   |            |   | Layer   |
+     *    |         |   +------------+   |         |
+     *    +---------+                    +---------+
+     *
+     * */
+
+
     private final Layer originLayer;
     private final Layer destinyLayer;
     private double[][] weights;
@@ -21,12 +37,17 @@ public class Synaptic
         destinyLayerBias = new double[destinyLayer.getNeurons().length];
     }
 
+    // Este método é responsável por executar a sinapse propriamente
+    // dita. Envolve calcular uma combinação linear para cada neurônio
+    // da camada de destino, onde as saídas dos neurônios da camada
+    // de origem formam o vetor e os pesos da sinapse formam os componentes
+    // da combinação.
     public void makeSynapse()
     {
-        double linearCombination = 0;
-
         for (int i = 0; i < destinyLayer.getNeurons().length; i++)
         {
+            double linearCombination = 0;
+
             for (int j = 0; j < originLayer.getNeurons().length; j++)
             {
                 linearCombination += originLayer.getNeurons()[j].getOutput() * weights[j][i];
@@ -35,15 +56,19 @@ public class Synaptic
             linearCombination += 1 * destinyLayerBias[i];
             destinyLayer.getNeurons()[i].setLastInputReceived(linearCombination);
         }
+    }
 
-        System.out.println("Camada Oculta:");
-        for (int i = 0; i < destinyLayer.getNeurons().length; i++)
-        {
-            System.out.printf("Neuronio %d: input %.2f e output %.2f\n", i + 1, destinyLayer.getNeurons()[i].getLastInputReceived(), destinyLayer.getNeurons()[i].getOutput());
-        }
+    // Este método imprime todas as saídas da camada de destino,
+    // utilizando as últimas entradas recebidas.
+    public void printDestinyLayerOutputs ()
+    {
+        System.out.println();
+        for (int i = 0; i < destinyLayer.getNeurons().length; i++) System.out.printf("Neuronio %d: output %.3f\n", (i+1), destinyLayer.getOutputs()[i]);
         System.out.println();
     }
 
+    // Este método ajusta os pesos a partir da correção de erros recebida
+    // e retorna a correção de erros necessária para a sinapse anterior.
     public double[] adjustWeightsAndBias(double learningRate, double[] correctionErrorsFromDestinyLayer)
     {
         double[] correctionErrorsToOriginLayer = getCorrectionErrorsForOriginLayer(correctionErrorsFromDestinyLayer);
@@ -61,6 +86,7 @@ public class Synaptic
         return correctionErrorsToOriginLayer;
     }
 
+    // Este método retorna a correção de erros necessária para a sinapse anterior.
     private double[] getCorrectionErrorsForOriginLayer (double[] correctionErrorsFromDestinyLayer)
     {
         if (originLayer.isEntryLayer()) return null;
@@ -81,6 +107,7 @@ public class Synaptic
         return correctionErrorsForOriginLayer;
     }
 
+    // Este método gera os pesos e bias aleatoriamente.
     public void setWeightsAndBiasRandomly()
     {
         if (initialWeightsAndBiasDefined) return;
@@ -106,6 +133,8 @@ public class Synaptic
         initialWeightsAndBiasDefined = true;
     }
 
+    // Este método reseta todos os pesos e baias da sinpase,
+    // alterando para 0 todos eles.
     public void resetWeightsAndBias()
     {
         weights = new double[weights.length][weights[0].length];
@@ -114,6 +143,7 @@ public class Synaptic
         initialWeightsAndBiasDefined = false;
     }
 
+    // Este método imprime todos os pesos e bias da sinapse.
     public void printWeightsAndBias()
     {
         System.out.println();
@@ -130,14 +160,14 @@ public class Synaptic
             System.out.println();
         }
 
-        System.out.print("\nDestiny Bias: ");
+        System.out.print("Destiny Bias: \t\t");
 
         for (int i = 0 ; i < destinyLayerBias.length; i++)
         {
             System.out.printf("%.2f \t", destinyLayerBias[i]);
         }
 
-        System.out.println();
+        System.out.println("\n");
     }
 
     @Override
