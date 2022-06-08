@@ -133,6 +133,19 @@ public class Synaptic
         initialWeightsAndBiasDefined = true;
     }
 
+    public void setWeightsAndBias (double[][] weights, double[] bias)
+    {
+        for (int i = 0; i < weights.length; i++)
+        {
+            for (int j = 0; j < weights[0].length; j++)
+            {
+                this.weights[i][j] = weights[i][j];
+            }
+        }
+
+        for (int i = 0; i < bias.length; i++) this.destinyLayerBias[i] = bias[i];
+    }
+
     // Este método reseta todos os pesos e baias da sinpase,
     // alterando para 0 todos eles.
     public void resetWeightsAndBias()
@@ -154,7 +167,7 @@ public class Synaptic
 
             for (int j = 0; j < weights[0].length; j++)
             {
-                System.out.printf("%.2f \t", weights[i][j]);
+                System.out.printf("%.4f \t", weights[i][j]);
             }
 
             System.out.println();
@@ -164,7 +177,7 @@ public class Synaptic
 
         for (int i = 0 ; i < destinyLayerBias.length; i++)
         {
-            System.out.printf("%.2f \t", destinyLayerBias[i]);
+            System.out.printf("%.4f \t", destinyLayerBias[i]);
         }
 
         System.out.println("\n");

@@ -1,4 +1,4 @@
-import Function.ArcTan.ArcTangentFunction;
+import Function.Sigmoid.SigmoidFunction;
 import NeuralNetwork.Data.CharactersData;
 import NeuralNetwork.Data.TrainingDataset;
 import NeuralNetwork.DataStructure.Layer;
@@ -9,50 +9,30 @@ import java.io.File;
 
 public class Main
 {
-    private static String pathFileTrain = "dataset" + File.separator + "caracteres-ruido e limpo-fabricio.csv";
-    private static String pathFileTest = "dataset" + File.separator + "caracteres_ruido20.csv";
+    private static String fileTrainPath = "dataset" + File.separator + "caracteres-limpo.csv";
+    private static String fileFilePath = "dataset" + File.separator + "caracteres-ruido.csv";
 
-    static NeuralNetwork neuralNetwork;
-    static NeuralNetworkTraining neuralNetworkTraining;
-    static TrainingDataset charactersData;
-    static TrainingDataset datasetToTest;
+    public static NeuralNetwork neuralNetwork;
+    public static NeuralNetworkTraining neuralNetworkTraining;
+    public static TrainingDataset datasetToTrain;
+    public static TrainingDataset datasetToTest;
 
     public static void main(String[] args)
     {
-        double[] learningRates = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
-        int[][] acertos = new int[100][learningRates.length];
+        neuralNetwork = new NeuralNetwork(63);
+        neuralNetwork.addLayer(new Layer(25, new SigmoidFunction()));
+        neuralNetwork.addLayer(new Layer(7, new SigmoidFunction()));
 
-        for (int i = 0; i < acertos.length; i++)
-        {
-            for (int j = 0; j < learningRates.length; j++)
-            {
-                neuralNetwork = new NeuralNetwork(63);
-                neuralNetwork.addLayer(new Layer(i + 1, new ArcTangentFunction()));
-                neuralNetwork.addLayer(new Layer(7, new ArcTangentFunction()));
+        datasetToTrain = new CharactersData(fileTrainPath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
+        datasetToTrain.shuffleAll();
 
-                charactersData = new CharactersData(pathFileTrain, 0.3);
-                charactersData.shuffleAll();
+        datasetToTest = new CharactersData(fileFilePath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
+        datasetToTest.shuffleAll();
 
-                neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, charactersData, false);
-                neuralNetworkTraining.setLearningRate(learningRates[j]);
-                neuralNetworkTraining.start(2000);
+        neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain);
+        neuralNetworkTraining.setLearningRate(0.5);
+        neuralNetworkTraining.start(1700);
 
-                datasetToTest = new CharactersData(pathFileTest, 0.0);
-                datasetToTest.shuffleAll();
-
-                acertos[i][j] = neuralNetwork.countRightAnswers(datasetToTest, 0.5);
-            }
-
-            System.out.printf("Acertos para rede neural %s: ", neuralNetwork.getNeuronsByLayerLabel());
-
-            int bestLearningRateIndex = 0;
-            for (int j = 0; j < acertos[0].length; j++)
-            {
-                if (acertos[i][j] > acertos[i][bestLearningRateIndex]) bestLearningRateIndex = j;
-                System.out.printf("[%.1f] %d/%d\t", learningRates[j], acertos[i][j], datasetToTest.getDataLength());
-            }
-
-            System.out.printf("Melhor taxa: %.1f\n", learningRates[bestLearningRateIndex]);
-        }
+        System.out.printf("Got %d/%d right answers", neuralNetwork.countRightAnswers(datasetToTest, 0.5), datasetToTest.getDataLength());
     }
 }

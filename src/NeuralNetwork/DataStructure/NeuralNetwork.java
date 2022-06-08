@@ -4,6 +4,7 @@ import NeuralNetwork.Data.Data;
 import NeuralNetwork.Data.TrainingDataset;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class NeuralNetwork
 {
@@ -83,6 +84,7 @@ public class NeuralNetwork
             }
         }
 
+        dataset.resetDataRead();
         return count;
     }
 
@@ -138,6 +140,14 @@ public class NeuralNetwork
         for (Synaptic synaptic : synapticList) synaptic.setWeightsAndBiasRandomly();
         initializedWeights = true;
         return true;
+    }
+
+    public void setWeightsAndBias (LinkedList<double[][]> weightsList, LinkedList<double[]> biasList)
+    {
+        for (int i = 0; i < synapticList.size(); i++)
+        {
+            synapticList.get(i).setWeightsAndBias(weightsList.get(i), biasList.get(i));
+        }
     }
 
     // Este método altera todos os pesos e bias para 0.
@@ -207,7 +217,6 @@ public class NeuralNetwork
             Synaptic backwardSynaptic = new Synaptic(layerList.get(indexInserted - 1), layerList.get(indexInserted));
             Synaptic forwardSynaptic = new Synaptic(layerList.get(indexInserted), layerList.get(indexInserted + 1));
             synapticList.remove(indexInserted - 1);
-            synapticList.remove(indexInserted);
             synapticList.add(indexInserted - 1, backwardSynaptic);
             synapticList.add(indexInserted, forwardSynaptic);
         }
@@ -225,8 +234,8 @@ public class NeuralNetwork
         else
         {
             synapticList.remove(indexRemoved - 1);
-            synapticList.remove(indexRemoved);
-            Synaptic synaptic = new Synaptic(layerList.get(indexRemoved - 1), layerList.get(indexRemoved + 1));
+            synapticList.remove(indexRemoved - 1);
+            Synaptic synaptic = new Synaptic(layerList.get(indexRemoved - 1), layerList.get(indexRemoved));
             synapticList.add(indexRemoved - 1, synaptic);
         }
     }

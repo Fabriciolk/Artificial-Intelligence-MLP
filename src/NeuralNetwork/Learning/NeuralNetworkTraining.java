@@ -47,48 +47,42 @@ public class NeuralNetworkTraining
     // exporta um arquivo CSV para cada época, com erro de teste e validação.
     public void start(int numberOfEpoch)
     {
-        try {
-            resultManager = new ResultManager(neuralNetwork, true);
-            tryToSetAllWeightsAndBiasRandomly();
+        resultManager = new ResultManager(neuralNetwork, writeResultsOnCSVFileEnabled);
+        neuralNetwork.setAllWeightsAndBiasRandomly();
 
-            for (int i = 0; i < numberOfEpoch; i++)
+        for (int i = 0; i < numberOfEpoch; i++)
+        {
+            EpochResult epochToTrain = new EpochResult();
+            EpochResult epochToValidate = new EpochResult();
+
+            while (!trainingDataSet.gotAllValidationData())
             {
-                EpochResult epochToTrain = new EpochResult();
-                EpochResult epochToValidate = new EpochResult();
-
-                while (!trainingDataSet.gotAllValidationData())
-                {
-                    Data dataToValidate = trainingDataSet.getNextValidationData();
-                    setDataOnInputLayer(dataToValidate.getData());
-                    runFeedforward();
-                    epochToValidate.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToValidate.getExceptedResult());
-                }
-
-                while (!trainingDataSet.gotAllTrainingData())
-                {
-                    Data dataToTrain = trainingDataSet.getNextTrainingData();
-                    setDataOnInputLayer(dataToTrain.getData());
-                    runFeedforward();
-                    epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getExceptedResult());
-                    runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getExceptedResult());
-                }
-
-                trainingDataSet.resetDataRead();
-                trainingDataSet.resetValidationDataRead();
-                trainingDataSet.shuffleAll();
-
-                resultManager.addEpochResult(epochToTrain);
-                resultManager.addEpochResultOnValidateList(epochToValidate);
-
-                if (stopOnNextEpoch) break;
+                Data dataToValidate = trainingDataSet.getNextValidationData();
+                setDataOnInputLayer(dataToValidate.getData());
+                runFeedforward();
+                epochToValidate.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToValidate.getExceptedResult());
             }
 
-            if (writeResultsOnCSVFileEnabled) resultManager.exportCSVFile();
+            while (!trainingDataSet.gotAllTrainingData())
+            {
+                Data dataToTrain = trainingDataSet.getNextTrainingData();
+                setDataOnInputLayer(dataToTrain.getData());
+                runFeedforward();
+                epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getExceptedResult());
+                runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getExceptedResult());
+            }
+
+            trainingDataSet.resetDataRead();
+            trainingDataSet.resetValidationDataRead();
+            trainingDataSet.shuffleAll();
+
+            resultManager.addEpochResult(epochToTrain);
+            resultManager.addEpochResultOnValidateList(epochToValidate);
+
+            if (stopOnNextEpoch) break;
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+
+        if (writeResultsOnCSVFileEnabled) resultManager.exportCSVFile();
     }
 
     // Este método retorna a rede neural.
@@ -118,18 +112,15 @@ public class NeuralNetworkTraining
         learningRate = rate;
     }
 
+    public double getLearningRate() {
+        return learningRate;
+    }
+
     /******************************\
      **                          **
      **      Private Methods     **
      **                          **
     \******************************/
-
-    // Este método altera aleatoriamente os pesos e bias
-    // de todas as sinapses
-    private boolean tryToSetAllWeightsAndBiasRandomly()
-    {
-        return neuralNetwork.setAllWeightsAndBiasRandomly();
-    }
 
     // Este método altera para 0 todos os pesos e bias
     // de todas as sinapses.

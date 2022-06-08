@@ -17,7 +17,7 @@ public class CharactersData implements TrainingDataset
     int numberOfDataRead = 0;
     int numberOfValidationDataRead = 0;
 
-    public CharactersData(String fileName, double validationDataPercent)
+    public CharactersData(String fileName, double validationDataPercent, int dataLength, int answerLength)
     {
         if (validationDataPercent < 0.0 || validationDataPercent > 1.0) return;
 
@@ -32,8 +32,8 @@ public class CharactersData implements TrainingDataset
                 {
                     stringValues[i] = stringValues[i].replace("\"", "");
                 }
-                double[] floatValues = new double[63];
-                double[] floatClass = new double[7];
+                double[] floatValues = new double[dataLength];
+                double[] floatClass = new double[answerLength];
 
                 for (int i = 0; i < floatValues.length; i++)
                 {
