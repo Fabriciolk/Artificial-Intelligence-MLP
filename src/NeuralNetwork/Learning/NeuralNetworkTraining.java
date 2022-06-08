@@ -84,7 +84,7 @@ public class NeuralNetworkTraining
             if (stopOnNextEpoch) break;
         }
 
-        if (writeResultsOnCSVFileEnabled) resultManager.exportCSVFile();
+        if (writeResultsOnCSVFileEnabled) resultManager.fillCSVFile();
     }
 
     // Este método retorna a rede neural.

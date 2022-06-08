@@ -38,7 +38,7 @@ public class ResultManager
         listOfResultsByEpochForValidate.add(epochResult);
     }
 
-    public void exportCSVFile()
+    public void fillCSVFile()
     {
         if (!CSVFileCreationEnabled) return;
 

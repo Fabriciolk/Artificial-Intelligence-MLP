@@ -29,7 +29,7 @@ public class Main
         datasetToTest = new CharactersDataset(fileFilePath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
         datasetToTest.shuffleAll();
 
-        neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain);
+        neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain, true);
         neuralNetworkTraining.setLearningRate(0.5);
         neuralNetworkTraining.start(1700);
 
