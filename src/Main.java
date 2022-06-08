@@ -32,7 +32,7 @@ public class Main
         neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain, true);
         neuralNetworkTraining.setLearningRate(0.5);
         neuralNetworkTraining.start(1700);
-        
+
         neuralNetworkTraining.getResultManager().exportNeuralNetworkParametersFile("MLPParameters.txt");
         neuralNetworkTraining.getResultManager().exportInitialWeightsFile("initialWeights.txt");
         neuralNetworkTraining.getResultManager().exportFinalWeightsFile("finalWeights.txt");

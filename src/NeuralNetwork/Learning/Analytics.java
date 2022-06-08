@@ -12,6 +12,15 @@ import java.util.LinkedList;
 
 public class Analytics
 {
+    /*
+    * Esta classe contém métodos utilizados para encontrar
+    * os paramêtros que fazem gerar a maior taxa média de
+    * acertos. Para o conjunto de dados utilizados até esse
+    * momento, essa classe já não tem mais utilidade, porém
+    * talvez seja útil testar outras coisas.
+    *
+    * */
+
     public static void runAllCases (String pathFileTrain, String pathFileTest) {
         int[] neuronAmountInterval = {20, 30};
         int[] rightAnswers = new int[100];
