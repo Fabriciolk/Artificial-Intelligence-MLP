@@ -82,7 +82,7 @@ public class CharactersDataset implements Dataset
     // Este método zera a quantidade de dados lidos
     // para que a lista de dados seja lida novamente
     @Override
-    public void resetDataRead() {
+    public void resetTrainingDataRead() {
         numberOfTrainingDataRead = 0;
     }
 

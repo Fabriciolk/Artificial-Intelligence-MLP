@@ -10,7 +10,7 @@ public interface Dataset
 
     boolean gotAllValidationData();
 
-    void resetDataRead();
+    void resetTrainingDataRead();
 
     void resetValidationDataRead();
 

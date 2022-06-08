@@ -84,7 +84,7 @@ public class NeuralNetwork
             }
         }
 
-        dataset.resetDataRead();
+        dataset.resetTrainingDataRead();
         return count;
     }
 

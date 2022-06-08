@@ -17,22 +17,22 @@ public class NeuralNetworkTraining
 
     private final NeuralNetwork neuralNetwork;
     private ResultManager resultManager;
-    private final Dataset dataSet;
+    private final Dataset dataset;
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
     private boolean writeResultsOnCSVFileEnabled = false;
 
-    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataSet, boolean writeResultsOnCSVFileEnabled)
+    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataset, boolean writeResultsOnCSVFileEnabled)
     {
         this.neuralNetwork = neuralNetwork;
-        this.dataSet = dataSet;
+        this.dataset = dataset;
         this.writeResultsOnCSVFileEnabled = writeResultsOnCSVFileEnabled;
     }
 
-    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataSet)
+    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataset)
     {
         this.neuralNetwork = neuralNetwork;
-        this.dataSet = dataSet;
+        this.dataset = dataset;
     }
 
     /*****************************\
@@ -57,26 +57,26 @@ public class NeuralNetworkTraining
             EpochResult epochToTrain = new EpochResult();
             EpochResult epochToValidate = new EpochResult();
 
-            while (!dataSet.gotAllValidationData())
+            while (!dataset.gotAllValidationData())
             {
-                Data dataToValidate = dataSet.getNextValidationData();
+                Data dataToValidate = dataset.getNextValidationData();
                 setDataOnInputLayer(dataToValidate.getData());
                 runFeedforward();
                 epochToValidate.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToValidate.getClassData());
             }
 
-            while (!dataSet.gotAllTrainingData())
+            while (!dataset.gotAllTrainingData())
             {
-                Data dataToTrain = dataSet.getNextTrainingData();
+                Data dataToTrain = dataset.getNextTrainingData();
                 setDataOnInputLayer(dataToTrain.getData());
                 runFeedforward();
                 epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
                 runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
             }
 
-            dataSet.resetDataRead();
-            dataSet.resetValidationDataRead();
-            dataSet.shuffleAll();
+            dataset.resetTrainingDataRead();
+            dataset.resetValidationDataRead();
+            dataset.shuffleAll();
 
             resultManager.addTrainingEpochResult(epochToTrain);
             resultManager.addValidationEpochResult(epochToValidate);

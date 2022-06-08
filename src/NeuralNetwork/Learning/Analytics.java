@@ -121,7 +121,7 @@ public class Analytics
                     rightAnswerTotalAmount += neuralNetwork.countRightAnswers(datasetToTest, 0.5);
                 }
 
-                datasetToTest.resetDataRead();
+                datasetToTest.resetTrainingDataRead();
                 rightAnswers[neuronAmount][(int)((learningRate - learningRatesInterval[0])/learningRatesInterval[2])] = String.valueOf(((double)rightAnswerTotalAmount)/howManyTimesToRun).concat("/").concat(String.valueOf(datasetToTest.getDataLength()));
             }
         }
