@@ -3,6 +3,8 @@ package NeuralNetwork.Learning;
 import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 
+import Exception.InvalidLearningRateException;
+
 import java.util.LinkedList;
 
 public class LearningThread implements Runnable

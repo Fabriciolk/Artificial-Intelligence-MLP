@@ -2,8 +2,8 @@ package NeuralNetwork.Data;
 
 public class Data
 {
-    private double[] data;
-    private double[] classData;
+    private final double[] data;
+    private final double[] classData;
 
     public Data(double[] data, double[] classData)
     {

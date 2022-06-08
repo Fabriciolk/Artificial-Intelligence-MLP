@@ -10,9 +10,9 @@ import java.util.Random;
 public class CharactersDataset implements Dataset
 {
     private final Random random = new Random();
-    private List<Data> trainingDataList = new LinkedList<>();
-    private List<Data> validationDataList = new LinkedList<>();
-    private int numberOfDataRead = -1;
+    private final List<Data> trainingDataList = new LinkedList<>();
+    private final List<Data> validationDataList = new LinkedList<>();
+    private int numberOfTrainingDataRead = -1;
     private int numberOfValidationDataRead = -1;
 
     public CharactersDataset(String fileName, double validationDataPercent, int dataLength, int answerLength)
@@ -57,8 +57,8 @@ public class CharactersDataset implements Dataset
     // Este método retorna um dado de treinamento.
     @Override
     public Data getNextTrainingData() {
-        numberOfDataRead++;
-        return trainingDataList.get(numberOfDataRead);
+        numberOfTrainingDataRead++;
+        return trainingDataList.get(numberOfTrainingDataRead);
     }
 
     // Este método retorna um dado de validação.
@@ -71,14 +71,14 @@ public class CharactersDataset implements Dataset
     // Este método determina se todos os dados já forma lidos.
     @Override
     public boolean gotAllTrainingData() {
-        return numberOfDataRead + 1 >= trainingDataList.size();
+        return numberOfTrainingDataRead + 1 >= trainingDataList.size();
     }
 
     // Este método zera a quantidade de dados lidos
     // para que a lista de dados seja lida novamente
     @Override
     public void resetDataRead() {
-        numberOfDataRead = 0;
+        numberOfTrainingDataRead = 0;
     }
 
     // Este método determina se todos os dados já forma lidos.
