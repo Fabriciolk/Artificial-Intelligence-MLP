@@ -9,8 +9,8 @@ import java.io.File;
 
 public class Main
 {
-    private static String fileTrainPath = "dataset" + File.separator + "caracteres-limpo.csv";
-    private static String fileFilePath = "dataset" + File.separator + "caracteres-ruido.csv";
+    public static String fileTrainPath = "dataset" + File.separator + "caracteres-limpo.csv";
+    public static String fileFilePath = "dataset" + File.separator + "caracteres-ruido.csv";
 
     public static NeuralNetwork neuralNetwork;
     public static NeuralNetworkTraining neuralNetworkTraining;
