@@ -64,6 +64,31 @@ public class ResultManager
         }
     }
 
+    public void exportNeuralNetworkParametersFile(String fileName)
+    {
+
+    }
+
+    public void exportInitialWeightsFile(String fileName)
+    {
+
+    }
+
+    public void exportFinalWeightsFile(String fileName)
+    {
+
+    }
+
+    public void exportErrorsFile(String fileName)
+    {
+
+    }
+
+    public void exportOutputsFile(String fileName)
+    {
+
+    }
+
     // Este método cria o arquivo CSV na pasta de results. O nome
     // do arquivo indica qual a estrutura da rede neural, ou seja,
     // quantos neurônios existem em cada camada.

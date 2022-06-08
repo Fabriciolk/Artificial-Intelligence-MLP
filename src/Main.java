@@ -33,6 +33,12 @@ public class Main
         neuralNetworkTraining.setLearningRate(0.5);
         neuralNetworkTraining.start(1700);
 
+        neuralNetworkTraining.getResultManager().exportNeuralNetworkParametersFile("MLPParameters.txt");
+        neuralNetworkTraining.getResultManager().exportInitialWeightsFile("initialWeights.txt");
+        neuralNetworkTraining.getResultManager().exportFinalWeightsFile("finalWeights.txt");
+        neuralNetworkTraining.getResultManager().exportErrorsFile("errors.txt");
+        neuralNetworkTraining.getResultManager().exportOutputsFile("outputs.txt");
+
         System.out.printf("Got %d/%d right answers", neuralNetwork.countRightAnswers(datasetToTest, 0.5), datasetToTest.getDataLength());
     }
 }
