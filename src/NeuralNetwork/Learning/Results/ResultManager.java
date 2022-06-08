@@ -48,7 +48,7 @@ public class ResultManager
 
     // Este método preenche o arquivo CSV com todos registros das épocas
     // feitos até o momento em que ele é chamado.
-    public void fillCSVFile()
+    public void fillTrainingAndValidationErrorsCSVFile()
     {
         if (!CSVFileCreationEnabled) return;
 
