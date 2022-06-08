@@ -2,8 +2,8 @@ package NeuralNetwork.Learning;
 
 import Function.ArcTan.ArcTangentFunction;
 import Function.Sigmoid.SigmoidFunction;
-import NeuralNetwork.Data.CharactersData;
-import NeuralNetwork.Data.TrainingDataset;
+import NeuralNetwork.Data.CharactersDataset;
+import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.Layer;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 
@@ -23,10 +23,10 @@ public class Analytics
                     neuralNetwork.addLayer(new Layer(i, new SigmoidFunction()));
                     neuralNetwork.addLayer(new Layer(7, new SigmoidFunction()));
 
-                    TrainingDataset datasetToTrain = new CharactersData(pathFileTrain, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
+                    Dataset datasetToTrain = new CharactersDataset(pathFileTrain, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
                     datasetToTrain.shuffleAll();
 
-                    TrainingDataset datasetToTest = new CharactersData(pathFileTest, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
+                    Dataset datasetToTest = new CharactersDataset(pathFileTest, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
                     datasetToTest.shuffleAll();
 
                     NeuralNetworkTraining neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain);
@@ -51,9 +51,9 @@ public class Analytics
         neuralNetwork.addLayer(new Layer(3, new SigmoidFunction()));
         neuralNetwork.addLayer(new Layer(2, new SigmoidFunction()));
 
-        TrainingDataset trainingDataset = new CharactersData("dataset" + File.separator + "teste_de_mesa.csv", 0.0, 2, 2);
+        Dataset dataset = new CharactersDataset("dataset" + File.separator + "teste_de_mesa.csv", 0.0, 2, 2);
 
-        NeuralNetworkTraining neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, trainingDataset);
+        NeuralNetworkTraining neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, dataset);
         neuralNetworkTraining.setLearningRate(0.5);
 
         LinkedList<double[][]> weightsList = new LinkedList<>();
@@ -88,8 +88,8 @@ public class Analytics
 
         NeuralNetwork neuralNetwork;
         NeuralNetworkTraining neuralNetworkTraining;
-        TrainingDataset charactersData;
-        TrainingDataset datasetToTest;
+        Dataset charactersData;
+        Dataset datasetToTest;
 
         int[] neuronAmountInterval = {1, 100};
         double[] learningRatesInterval = {0.1, 1.0, 0.05};
@@ -102,7 +102,7 @@ public class Analytics
                 int rightAnswerTotalAmount = 0;
                 int howManyTimesToRun = 100;
 
-                datasetToTest = new CharactersData(pathFileTest, 0.0, 63, 7);
+                datasetToTest = new CharactersDataset(pathFileTest, 0.0, 63, 7);
                 datasetToTest.shuffleAll();
 
                 for (int times = 0; times < howManyTimesToRun; times++)
@@ -111,7 +111,7 @@ public class Analytics
                     neuralNetwork.addLayer(new Layer(neuronAmount, new ArcTangentFunction()));
                     neuralNetwork.addLayer(new Layer(7, new ArcTangentFunction()));
 
-                    charactersData = new CharactersData(pathFileTrain, 0.3, 63, 7);
+                    charactersData = new CharactersDataset(pathFileTrain, 0.3, 63, 7);
                     charactersData.shuffleAll();
 
                     neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, charactersData, false);

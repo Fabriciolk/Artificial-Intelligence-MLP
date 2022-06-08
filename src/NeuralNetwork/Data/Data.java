@@ -3,19 +3,19 @@ package NeuralNetwork.Data;
 public class Data
 {
     private double[] data;
-    private double[] exceptedResult;
+    private double[] classData;
 
-    public Data(double[] data, double[] exceptedResult)
+    public Data(double[] data, double[] classData)
     {
         this.data = data;
-        this.exceptedResult = exceptedResult;
+        this.classData = classData;
     }
 
     public double[] getData() {
         return data;
     }
 
-    public double[] getExceptedResult() {
-        return exceptedResult;
+    public double[] getClassData() {
+        return classData;
     }
 }

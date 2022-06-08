@@ -1,6 +1,6 @@
 package NeuralNetwork.Learning;
 
-import NeuralNetwork.Data.TrainingDataset;
+import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 
 import java.util.LinkedList;
@@ -10,8 +10,8 @@ public class LearningThread implements Runnable
     private final LinkedList<String> performanceList = new LinkedList<>();
     private NeuralNetwork neuralNetwork;
     private NeuralNetworkTraining neuralNetworkTraining;
-    private TrainingDataset trainingDataset;
-    private TrainingDataset testingDataset;
+    private Dataset dataset;
+    private Dataset testingDataset;
     private boolean writeResultsOnCSVFileEnabled;
     private int numberOfEpochs;
     private double thresholdForTest = 0.5;
@@ -20,23 +20,23 @@ public class LearningThread implements Runnable
 
     public int acertos = 0;
 
-    public LearningThread (NeuralNetwork neuralNetwork, TrainingDataset trainingDataset, int numberOfEpochs, boolean writeResultsOnCSVFileEnabled)
+    public LearningThread (NeuralNetwork neuralNetwork, Dataset dataset, int numberOfEpochs, boolean writeResultsOnCSVFileEnabled)
     {
         this.neuralNetwork = neuralNetwork;
-        this.trainingDataset = trainingDataset;
+        this.dataset = dataset;
         this.numberOfEpochs = numberOfEpochs;
         this.writeResultsOnCSVFileEnabled = writeResultsOnCSVFileEnabled;
-        this.neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, trainingDataset, writeResultsOnCSVFileEnabled);
+        this.neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, dataset, writeResultsOnCSVFileEnabled);
     }
 
-    public LearningThread (NeuralNetwork neuralNetwork, TrainingDataset trainingDataset, int numberOfEpochs)
+    public LearningThread (NeuralNetwork neuralNetwork, Dataset dataset, int numberOfEpochs)
     {
-        this(neuralNetwork, trainingDataset, numberOfEpochs, false);
+        this(neuralNetwork, dataset, numberOfEpochs, false);
     }
 
-    public LearningThread (NeuralNetwork neuralNetwork, TrainingDataset trainingDataset)
+    public LearningThread (NeuralNetwork neuralNetwork, Dataset dataset)
     {
-        this(neuralNetwork, trainingDataset, 1);
+        this(neuralNetwork, dataset, 1);
     }
 
     public void setNumberOfEpochs (int numberOfEpochs)
@@ -54,7 +54,7 @@ public class LearningThread implements Runnable
         this.neuralNetworkTraining.setLearningRate(rate);
     }
 
-    public void setTestingDataset (TrainingDataset testingDataset)
+    public void setTestingDataset (Dataset testingDataset)
     {
         this.testingDataset = testingDataset;
     }

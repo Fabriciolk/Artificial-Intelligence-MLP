@@ -1,6 +1,6 @@
 import Function.Sigmoid.SigmoidFunction;
-import NeuralNetwork.Data.CharactersData;
-import NeuralNetwork.Data.TrainingDataset;
+import NeuralNetwork.Data.CharactersDataset;
+import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.Layer;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 import NeuralNetwork.Learning.NeuralNetworkTraining;
@@ -14,8 +14,8 @@ public class Main
 
     public static NeuralNetwork neuralNetwork;
     public static NeuralNetworkTraining neuralNetworkTraining;
-    public static TrainingDataset datasetToTrain;
-    public static TrainingDataset datasetToTest;
+    public static Dataset datasetToTrain;
+    public static Dataset datasetToTest;
 
     public static void main(String[] args)
     {
@@ -23,10 +23,10 @@ public class Main
         neuralNetwork.addLayer(new Layer(25, new SigmoidFunction()));
         neuralNetwork.addLayer(new Layer(7, new SigmoidFunction()));
 
-        datasetToTrain = new CharactersData(fileTrainPath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
+        datasetToTrain = new CharactersDataset(fileTrainPath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
         datasetToTrain.shuffleAll();
 
-        datasetToTest = new CharactersData(fileFilePath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
+        datasetToTest = new CharactersDataset(fileFilePath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
         datasetToTest.shuffleAll();
 
         neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain);

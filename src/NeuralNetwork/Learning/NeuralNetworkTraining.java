@@ -1,11 +1,13 @@
 package NeuralNetwork.Learning;
 
 import NeuralNetwork.Data.Data;
-import NeuralNetwork.Data.TrainingDataset;
+import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 import NeuralNetwork.DataStructure.Neuron;
 import NeuralNetwork.Learning.Results.EpochResult;
 import NeuralNetwork.Learning.Results.ResultManager;
+
+import Exception.InvalidLearningRateException;
 
 public class NeuralNetworkTraining
 {
@@ -15,22 +17,22 @@ public class NeuralNetworkTraining
 
     private final NeuralNetwork neuralNetwork;
     private ResultManager resultManager;
-    private TrainingDataset trainingDataSet;
+    private Dataset dataSet;
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
     private boolean writeResultsOnCSVFileEnabled = false;
 
-    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, TrainingDataset trainingDataSet, boolean writeResultsOnCSVFileEnabled)
+    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataSet, boolean writeResultsOnCSVFileEnabled)
     {
         this.neuralNetwork = neuralNetwork;
-        this.trainingDataSet = trainingDataSet;
+        this.dataSet = dataSet;
         this.writeResultsOnCSVFileEnabled = writeResultsOnCSVFileEnabled;
     }
 
-    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, TrainingDataset trainingDataSet)
+    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataSet)
     {
         this.neuralNetwork = neuralNetwork;
-        this.trainingDataSet = trainingDataSet;
+        this.dataSet = dataSet;
     }
 
     /*****************************\
@@ -55,26 +57,26 @@ public class NeuralNetworkTraining
             EpochResult epochToTrain = new EpochResult();
             EpochResult epochToValidate = new EpochResult();
 
-            while (!trainingDataSet.gotAllValidationData())
+            while (!dataSet.gotAllValidationData())
             {
-                Data dataToValidate = trainingDataSet.getNextValidationData();
+                Data dataToValidate = dataSet.getNextValidationData();
                 setDataOnInputLayer(dataToValidate.getData());
                 runFeedforward();
-                epochToValidate.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToValidate.getExceptedResult());
+                epochToValidate.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToValidate.getClassData());
             }
 
-            while (!trainingDataSet.gotAllTrainingData())
+            while (!dataSet.gotAllTrainingData())
             {
-                Data dataToTrain = trainingDataSet.getNextTrainingData();
+                Data dataToTrain = dataSet.getNextTrainingData();
                 setDataOnInputLayer(dataToTrain.getData());
                 runFeedforward();
-                epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getExceptedResult());
-                runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getExceptedResult());
+                epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
+                runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
             }
 
-            trainingDataSet.resetDataRead();
-            trainingDataSet.resetValidationDataRead();
-            trainingDataSet.shuffleAll();
+            dataSet.resetDataRead();
+            dataSet.resetValidationDataRead();
+            dataSet.shuffleAll();
 
             resultManager.addEpochResult(epochToTrain);
             resultManager.addEpochResultOnValidateList(epochToValidate);
@@ -106,9 +108,9 @@ public class NeuralNetworkTraining
     }
 
     // Este método altera a taxa de aprendizagem.
-    public void setLearningRate(double rate)
+    public void setLearningRate(double rate) throws InvalidLearningRateException
     {
-        if (rate <= 0 || rate > 1) return;
+        if (rate <= 0 || rate > 1) throw new InvalidLearningRateException(rate);
         learningRate = rate;
     }
 

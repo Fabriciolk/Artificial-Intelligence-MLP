@@ -1,6 +1,6 @@
 package NeuralNetwork.Data;
 
-public interface TrainingDataset
+public interface Dataset
 {
     Data getNextTrainingData();
 
