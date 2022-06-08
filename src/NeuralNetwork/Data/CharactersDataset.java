@@ -9,6 +9,11 @@ import java.util.Random;
 
 public class CharactersDataset implements Dataset
 {
+    /*
+    * Esta classe é responsável por fornecer os dados
+    * para a rede neural ser treinada e validada.
+    * */
+
     private final Random random = new Random();
     private final List<Data> trainingDataList = new LinkedList<>();
     private final List<Data> validationDataList = new LinkedList<>();

@@ -9,11 +9,15 @@ import java.util.LinkedList;
 
 public class ResultManager
 {
-    private final LinkedList<EpochResult> listOfResultsByEpoch = new LinkedList<>();
-    private final LinkedList<EpochResult> listOfResultsByEpochForValidate = new LinkedList<>();
+    /*
+    * Esta classe é responsável por gerenciar os resultados das épocas
+    * e gerar os arquivos de saída adequados.
+    * */
+
+    private final LinkedList<EpochResult> trainingEpochResultsList = new LinkedList<>();
+    private final LinkedList<EpochResult> validationEpochResultsList = new LinkedList<>();
     private final NeuralNetwork neuralNetwork;
     private FileWriter epochResultsCSVFile;
-    private boolean trainingFinished = false;
     private boolean CSVFileCreationEnabled = false;
 
     public ResultManager(NeuralNetwork neuralNetwork)
@@ -28,23 +32,29 @@ public class ResultManager
         if (CSVFileCreationEnabled) createCSVFile();
     }
 
-    public void addEpochResult(EpochResult epochResult)
+    // Este método adiciona o resultado da época (saída obtida e esperada)
+    // gerado a partir de um dado de treinamento.
+    public void addTrainingEpochResult(EpochResult epochResult)
     {
-        listOfResultsByEpoch.add(epochResult);
+        trainingEpochResultsList.add(epochResult);
     }
 
-    public void addEpochResultOnValidateList(EpochResult epochResult)
+    // Este método adiciona o resultado da época (saída obtida e esperada)
+    // gerado a partir de um dado de validação.
+    public void addValidationEpochResult(EpochResult epochResult)
     {
-        listOfResultsByEpochForValidate.add(epochResult);
+        validationEpochResultsList.add(epochResult);
     }
 
+    // Este método preenche o arquivo CSV com todos registros das épocas
+    // feitos até o momento em que ele é chamado.
     public void fillCSVFile()
     {
         if (!CSVFileCreationEnabled) return;
 
         try {
-            for (int i = 0; i < Math.min(listOfResultsByEpoch.size(), listOfResultsByEpochForValidate.size()); i++) {
-                epochResultsCSVFile.append(listOfResultsByEpoch.get(i).getErrorsMean() + ", " + listOfResultsByEpochForValidate.get(i).getErrorsMean() + "\n");
+            for (int i = 0; i < Math.min(trainingEpochResultsList.size(), validationEpochResultsList.size()); i++) {
+                epochResultsCSVFile.append(String.valueOf(trainingEpochResultsList.get(i).getErrorsMean())).append(", ").append(String.valueOf(validationEpochResultsList.get(i).getErrorsMean())).append("\n");
             }
 
             epochResultsCSVFile.close();
@@ -54,6 +64,9 @@ public class ResultManager
         }
     }
 
+    // Este método cria o arquivo CSV na pasta de results. O nome
+    // do arquivo indica qual a estrutura da rede neural, ou seja,
+    // quantos neurônios existem em cada camada.
     private void createCSVFile()
     {
         try {

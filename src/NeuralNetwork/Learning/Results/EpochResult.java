@@ -6,6 +6,13 @@ import java.util.LinkedList;
 
 public class EpochResult
 {
+    /*
+    * Esta classe é responsável por todas as saídas geradas a partir
+    * do fornecimento de um dado como entrada. Inclui portanto os resultados
+    * obtidos na camada de saída e os erros cometidos pela rede neural
+    * a partir desses valores.
+    * */
+
     private LinkedList<double[]> outputLayerResults = new LinkedList<>();
     private LinkedList<double[]> outputLayerErrors = new LinkedList<>();
 
@@ -20,6 +27,7 @@ public class EpochResult
         outputLayerErrors.add(error);
     }
 
+    // Este método retorna a média quadrática dos erros da saída da época.
     public double getErrorsMean()
     {
         double[] epochErrorSums = new double[outputLayerErrors.size()];
@@ -32,6 +40,7 @@ public class EpochResult
         return Statistic.getMean(epochErrorSums);
     }
 
+    // Este método retorna a soma quadrática dos erros da saída da época.
     private double getOutputErrorsSum(double[] outputError)
     {
         double outputLayerErrorsSum = 0;

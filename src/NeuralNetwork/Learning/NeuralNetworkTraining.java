@@ -17,7 +17,7 @@ public class NeuralNetworkTraining
 
     private final NeuralNetwork neuralNetwork;
     private ResultManager resultManager;
-    private Dataset dataSet;
+    private final Dataset dataSet;
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
     private boolean writeResultsOnCSVFileEnabled = false;
@@ -78,8 +78,8 @@ public class NeuralNetworkTraining
             dataSet.resetValidationDataRead();
             dataSet.shuffleAll();
 
-            resultManager.addEpochResult(epochToTrain);
-            resultManager.addEpochResultOnValidateList(epochToValidate);
+            resultManager.addTrainingEpochResult(epochToTrain);
+            resultManager.addValidationEpochResult(epochToValidate);
 
             if (stopOnNextEpoch) break;
         }

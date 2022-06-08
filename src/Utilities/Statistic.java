@@ -2,6 +2,11 @@ package Utilities;
 
 public class Statistic
 {
+    /*
+    * Esta classe é responsável por conter métodos
+    * gerais relacionados a estatística.
+    * */
+
     public static double getMean(double[] values)
     {
         double sum = 0;
