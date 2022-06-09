@@ -11,10 +11,10 @@ public class Neuron
     *
     *                 ******
     *              **        **
-    *             **           **
-    *  input --> **   Neuron    ** --> output
-    *             **           **
-    *              **         **
+    *             **          **
+    *  input --> **   Neuron   ** --> output
+    *             **          **
+    *              **        **
     *                 ******
     *
     * */
