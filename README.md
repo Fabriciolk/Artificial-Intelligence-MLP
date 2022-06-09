@@ -1,2 +1,2 @@
-# Multilayer-Perpectron
+# Multilayer-Perceptron
 Artificial Neural Network
