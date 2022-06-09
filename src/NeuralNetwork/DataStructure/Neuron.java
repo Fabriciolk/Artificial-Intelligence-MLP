@@ -8,7 +8,18 @@ public class Neuron
     *  Esta classe é responsável por um neurônio. Ele
     *  possui a última entrada recebida e uma função
     *  de ativação para gerar sua saída.
+    *
+    *                 ******
+    *              **        **
+    *             **           **
+    *  input --> **   Neuron    ** --> output
+    *             **           **
+    *              **         **
+    *                 ******
+    *
     * */
+
+
     private ActivationFunction activationFunction;
     private double lastInputReceived;
 

@@ -6,7 +6,16 @@ public class Layer
 {
     /*
     *  Esta classe é responsável por uma camada de neurônios
-    *  na estrura de dados da rede neural.
+    *  na estrura de dados da rede neural. Ela contém um ou
+    *  mais neurônios, representada pelo esquema abaixo.
+    *
+    *                +-------+
+    *                | 1st N.|
+    *                | 2nd N.|
+    *                | 3rd N.|
+    *                |  ...  |
+    *                |       |
+    *                +-------+
     *
     * */
 
