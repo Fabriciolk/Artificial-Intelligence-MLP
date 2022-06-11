@@ -129,16 +129,26 @@ public class NeuralNetwork
         for (Synaptic synaptic : synapticList) synaptic.setWeightsAndBiasRandomly();
     }
 
+    // Este método retorna uma cópia dos pesos de uma sinapse. Pode-se decidir
+    // se os pesos serão os iniciais ou não (atuais).
     public double[][] getSynapseWeights(int index, boolean isInitialWeights)
     {
         if (index < 0 || index >= synapticList.size()) return null;
         return synapticList.get(index).getWeights(isInitialWeights);
     }
 
+    // Este método retorna uma cópia dos bias de uma sinapse. Pode-se decidir
+    // se os bias serão os iniciais ou não (atuais).
     public double[] getSynapseDestinyLayerBias(int index, boolean isInitialBias)
     {
         if (index < 0 || index >= synapticList.size()) return null;
         return synapticList.get(index).getDestinyLayerBias(isInitialBias);
+    }
+
+    public String getLayerActivationFunction(int index)
+    {
+        if (index < 0 || index >= layerList.size()) return null;
+        return layerList.get(index).getActivationFunction();
     }
 
     // Este método altera todos os pesos e bias para 0.

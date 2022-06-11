@@ -33,11 +33,11 @@ public class Main
         neuralNetworkTraining.setLearningRate(0.5);
         neuralNetworkTraining.start(1700);
 
-        neuralNetworkTraining.getResultManager().exportNeuralNetworkParametersFile("MLPParameters.txt");
+        neuralNetworkTraining.getResultManager().exportNeuralNetworkParametersFile("MLPParameters.txt", neuralNetworkTraining);
         neuralNetworkTraining.getResultManager().exportWeightsAndBiasFile("initialWeights.csv", true);
         neuralNetworkTraining.getResultManager().exportWeightsAndBiasFile("finalWeights.csv", false);
         neuralNetworkTraining.getResultManager().exportErrorsFile("errorsByEpoch.csv");
-        neuralNetworkTraining.getResultManager().exportOutputsFile("outputs.txt");
+        neuralNetworkTraining.getResultManager().exportOutputsFile("outputs.txt", datasetToTest);
 
         System.out.printf("Got %d/%d right answers", neuralNetwork.countRightAnswers(datasetToTest, 0.5), datasetToTest.getDataLength());
     }

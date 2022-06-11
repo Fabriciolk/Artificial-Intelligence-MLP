@@ -21,10 +21,12 @@ public class Layer
 
     private Neuron[] neurons;
     private boolean isEntryLayer = false;
+    private String activationFunction;
 
     public Layer (int neuronAmount, ActivationFunction activationFunction)
     {
         neurons = new Neuron[neuronAmount];
+        this.activationFunction = activationFunction.toString();
         for (int i = 0; i < neurons.length; i++) neurons[i] = new Neuron(activationFunction);
     }
 
@@ -57,6 +59,11 @@ public class Layer
     // Este método retorna o vetor de neurônios.
     public Neuron[] getNeurons() {
         return neurons;
+    }
+
+    // Este método retorna a função de ativação utilizada pela camada
+    public String getActivationFunction() {
+        return activationFunction;
     }
 
     // Este método retorna um booleano indicando

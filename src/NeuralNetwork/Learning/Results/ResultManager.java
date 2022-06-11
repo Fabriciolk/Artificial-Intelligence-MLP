@@ -1,6 +1,9 @@
 package NeuralNetwork.Learning.Results;
 
+import NeuralNetwork.Data.Data;
+import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.NeuralNetwork;
+import NeuralNetwork.Learning.NeuralNetworkTraining;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -37,9 +40,27 @@ public class ResultManager
         validationEpochResultsList.add(epochResult);
     }
 
-    public void exportNeuralNetworkParametersFile(String fileName)
+    public void exportNeuralNetworkParametersFile(String fileName, NeuralNetworkTraining neuralNetworkTraining)
     {
         FileWriter file = createFile(fileName);
+        assert file != null;
+        String[] neuronsByLayer = neuralNetwork.getNeuronsByLayerLabel().split("-");
+
+        try
+        {
+            for (int i = 0; i < neuronsByLayer.length; i++)
+            {
+                file.append(String.format("Layer %d: %s neurons; Activation function: %s\n", (i + 1), neuronsByLayer[i], neuralNetwork.getLayerActivationFunction(i)));
+            }
+            file.append("\n");
+            file.append(String.format("Number of Epochs: %d\n", trainingEpochResultsList.size()));
+            file.append(String.format("Learning rate: %.2f\n", neuralNetworkTraining.getLearningRate()));
+
+            file.close();
+        }
+        catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exportWeightsAndBiasFile(String fileName, boolean isInitial)
@@ -107,10 +128,44 @@ public class ResultManager
         }
     }
 
-    public void exportOutputsFile(String fileName)
+    public void exportOutputsFile(String fileName, Dataset dataset)
     {
         FileWriter file = createFile(fileName);
+        dataset.resetTrainingDataRead();
 
+        try {
+            assert file != null;
+            int currentData = 1;
+            double[] output;
+
+            while (!dataset.gotAllTrainingData())
+            {
+                file.append("Data ").append(String.valueOf(currentData)).append("\n");
+                Data data = dataset.getNextTrainingData();
+
+                // Escreve os valores do dado no arquivo
+                for (int i = 0; i < data.getData().length; i++) file.append(String.valueOf(data.getData()[i])).append("\t");
+                file.append("\n");
+                file.append("Output\n");
+
+                // Utiliza a rede neural para obter os outputs
+                neuralNetwork.getInputLayer().setInputs(data.getData());
+                neuralNetwork.makeAllSynapse();
+                output = neuralNetwork.getOutputLayer().getOutputs();
+
+                // Escreve os valores do output noa arquivo
+                for (double v : output) file.append(String.format("%.5f", v)).append("\t");
+                file.append("\n\n");
+
+                currentData++;
+            }
+
+            dataset.resetTrainingDataRead();
+            file.close();
+        }
+        catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
 

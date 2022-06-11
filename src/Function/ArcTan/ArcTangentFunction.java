@@ -16,4 +16,9 @@ public class ArcTangentFunction implements ActivationFunction
     {
         return derivativeArcTangentFunction;
     }
+
+    @Override
+    public String toString() {
+        return "Arc Tangent Function";
+    }
 }

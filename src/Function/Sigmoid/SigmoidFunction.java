@@ -16,4 +16,9 @@ public class SigmoidFunction implements ActivationFunction
     {
         return derivativeSigmoidFunction;
     }
+
+    @Override
+    public String toString() {
+        return "Sigmoid Function";
+    }
 }
