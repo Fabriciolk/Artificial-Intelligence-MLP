@@ -46,6 +46,10 @@ public class NeuralNetworkTraining
 
         for (int i = 0; i < numberOfEpoch; i++)
         {
+            dataset.resetTrainingDataRead();
+            dataset.resetValidationDataRead();
+            dataset.shuffleAll();
+
             EpochResult epochToTrain = new EpochResult();
             EpochResult epochToValidate = new EpochResult();
 
@@ -65,10 +69,6 @@ public class NeuralNetworkTraining
                 epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
                 runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
             }
-
-            dataset.resetTrainingDataRead();
-            dataset.resetValidationDataRead();
-            dataset.shuffleAll();
 
             resultManager.addTrainingEpochResult(epochToTrain);
             resultManager.addValidationEpochResult(epochToValidate);
@@ -110,7 +110,9 @@ public class NeuralNetworkTraining
         learningRate = rate;
     }
 
-    public double getLearningRate() {
+    // Este método retorna a taxa de aprendizado
+    public double getLearningRate()
+    {
         return learningRate;
     }
 

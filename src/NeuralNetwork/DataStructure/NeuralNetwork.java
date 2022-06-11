@@ -4,7 +4,6 @@ import NeuralNetwork.Data.Data;
 import NeuralNetwork.Data.Dataset;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class NeuralNetwork
 {
@@ -46,6 +45,7 @@ public class NeuralNetwork
     // cido.
     public int countRightAnswers(Dataset dataset, double threshold)
     {
+        dataset.resetTrainingDataRead();
         int count = 0;
 
         while (!dataset.gotAllTrainingData())

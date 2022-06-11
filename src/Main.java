@@ -24,10 +24,7 @@ public class Main
         neuralNetwork.addLayer(new Layer(7, new SigmoidFunction()));
 
         datasetToTrain = new CharactersDataset(fileTrainPath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
-        datasetToTrain.shuffleAll();
-
         datasetToTest = new CharactersDataset(fileFilePath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
-        datasetToTest.shuffleAll();
 
         neuralNetworkTraining = new NeuralNetworkTraining(neuralNetwork, datasetToTrain);
         neuralNetworkTraining.setLearningRate(0.5);
