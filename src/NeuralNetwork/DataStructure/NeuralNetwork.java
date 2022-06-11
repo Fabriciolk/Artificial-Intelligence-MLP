@@ -26,7 +26,6 @@ public class NeuralNetwork
     * */
 
     private final int MINIMUM_NEURON_BY_LAYER = 1;
-    private boolean initializedWeights = false;
     private ArrayList<Layer> layerList = new ArrayList<>();
     private ArrayList<Synaptic> synapticList = new ArrayList<>();
 
@@ -42,17 +41,6 @@ public class NeuralNetwork
      **                         **
     \*****************************/
 
-    // Fornecido um dado, este método retorna
-    // as saídas da rede neural, após passar
-    // por todas as sinapses.
-    public double[] classifyData(double[] data)
-    {
-        if (!initializedWeights) return null;
-        getInputLayer().setInputs(data);
-        makeAllSynapse();
-        return getOutputLayer().getOutputs();
-    }
-
     // Este método retorna a quantidade de acertos que a rede neural
     // atingiu utilizando como teste todos os dados do dataset forne-
     // cido.
@@ -63,7 +51,9 @@ public class NeuralNetwork
         while (!dataset.gotAllTrainingData())
         {
             Data dataToTest = dataset.getNextTrainingData();
-            double[] MPLOutput = classifyData(dataToTest.getData());
+            getInputLayer().setInputs(dataToTest.getData());
+            makeAllSynapse();
+            double[] MPLOutput = getOutputLayer().getOutputs();
 
             count++;
             for (int j = 0; j < MPLOutput.length; j++)
@@ -134,20 +124,21 @@ public class NeuralNetwork
 
     // Este método gera pesos e bias aleatórios
     // para todas as sinapses.
-    public boolean setAllWeightsAndBiasRandomly()
+    public void setAllWeightsAndBiasRandomly()
     {
-        if (initializedWeights) return false;
         for (Synaptic synaptic : synapticList) synaptic.setWeightsAndBiasRandomly();
-        initializedWeights = true;
-        return true;
     }
 
-    public void setWeightsAndBias (LinkedList<double[][]> weightsList, LinkedList<double[]> biasList)
+    public double[][] getSynapseWeights(int index)
     {
-        for (int i = 0; i < synapticList.size(); i++)
-        {
-            synapticList.get(i).setWeightsAndBias(weightsList.get(i), biasList.get(i));
-        }
+        if (index < 0 || index >= synapticList.size()) return null;
+        return synapticList.get(index).getWeights();
+    }
+
+    public double[] getSynapseDestinyLayerBias(int index)
+    {
+        if (index < 0 || index >= synapticList.size()) return null;
+        return synapticList.get(index).getDestinyLayerBias();
     }
 
     // Este método altera todos os pesos e bias para 0.

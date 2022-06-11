@@ -3,6 +3,8 @@ package NeuralNetwork.DataStructure;
 import java.util.Arrays;
 import java.util.Random;
 
+import Exception.FailedToSetWeightsAndBiasException;
+
 public class Synaptic
 {
     /* Esta classe é responsável por uma única sinapse. Ela
@@ -107,10 +109,30 @@ public class Synaptic
         return correctionErrorsForOriginLayer;
     }
 
+    public double[][] getWeights()
+    {
+        double[][] weightsCopy = new double[weights.length][weights[0].length];
+
+        for (int i = 0; i < weights.length; i++) {
+            System.arraycopy(weights[i], 0, weightsCopy[i], 0, weights[i].length);
+        }
+
+        return weightsCopy;
+    }
+
+    public double[] getDestinyLayerBias()
+    {
+        double[] biasCopy = new double[destinyLayerBias.length];
+        System.arraycopy(destinyLayerBias, 0, biasCopy, 0, destinyLayerBias.length);
+        return biasCopy;
+    }
+
     // Este método gera os pesos e bias aleatoriamente.
     public void setWeightsAndBiasRandomly()
     {
-        if (initialWeightsAndBiasDefined) return;
+        try { if (initialWeightsAndBiasDefined) throw new FailedToSetWeightsAndBiasException(); }
+        catch (FailedToSetWeightsAndBiasException e) { e.printStackTrace(); return; }
+
         initialWeights = new double[originLayer.getNeurons().length][destinyLayer.getNeurons().length];
         initialDestinyLayerBias = new double[destinyLayer.getNeurons().length];
         Random random = new Random();
@@ -131,19 +153,6 @@ public class Synaptic
         }
 
         initialWeightsAndBiasDefined = true;
-    }
-
-    public void setWeightsAndBias (double[][] weights, double[] bias)
-    {
-        for (int i = 0; i < weights.length; i++)
-        {
-            for (int j = 0; j < weights[0].length; j++)
-            {
-                this.weights[i][j] = weights[i][j];
-            }
-        }
-
-        for (int i = 0; i < bias.length; i++) this.destinyLayerBias[i] = bias[i];
     }
 
     // Este método reseta todos os pesos e baias da sinpase,

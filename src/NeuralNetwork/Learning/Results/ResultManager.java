@@ -17,19 +17,10 @@ public class ResultManager
     private final LinkedList<EpochResult> trainingEpochResultsList = new LinkedList<>();
     private final LinkedList<EpochResult> validationEpochResultsList = new LinkedList<>();
     private final NeuralNetwork neuralNetwork;
-    private FileWriter epochResultsCSVFile;
-    private boolean CSVFileCreationEnabled = false;
 
     public ResultManager(NeuralNetwork neuralNetwork)
     {
         this.neuralNetwork = neuralNetwork;
-    }
-
-    public ResultManager(NeuralNetwork neuralNetwork, boolean createCSVFile)
-    {
-        this.neuralNetwork = neuralNetwork;
-        CSVFileCreationEnabled = createCSVFile;
-        if (CSVFileCreationEnabled) createCSVFile();
     }
 
     // Este método adiciona o resultado da época (saída obtida e esperada)
@@ -46,60 +37,96 @@ public class ResultManager
         validationEpochResultsList.add(epochResult);
     }
 
-    // Este método preenche o arquivo CSV com todos registros das épocas
-    // feitos até o momento em que ele é chamado.
-    public void fillTrainingAndValidationErrorsCSVFile()
-    {
-        if (!CSVFileCreationEnabled) return;
-
-        try {
-            for (int i = 0; i < Math.min(trainingEpochResultsList.size(), validationEpochResultsList.size()); i++) {
-                epochResultsCSVFile.append(String.valueOf(trainingEpochResultsList.get(i).getErrorsMean())).append(", ").append(String.valueOf(validationEpochResultsList.get(i).getErrorsMean())).append("\n");
-            }
-
-            epochResultsCSVFile.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void exportNeuralNetworkParametersFile(String fileName)
     {
-
+        FileWriter file = createFile(fileName);
     }
 
     public void exportInitialWeightsFile(String fileName)
     {
-
+        FileWriter file = createFile(fileName);
     }
 
     public void exportFinalWeightsFile(String fileName)
     {
+        int currentIndex = 0;
+        double[][] currentSynapseWeights = neuralNetwork.getSynapseWeights(currentIndex);
+        double[] currentLayerBias = neuralNetwork.getSynapseDestinyLayerBias(currentIndex);
 
+        while (currentSynapseWeights != null)
+        {
+            FileWriter file = createFile(new StringBuilder(fileName).insert(fileName.lastIndexOf('.'), currentIndex + 1).toString());
+            assert file != null;
+
+            try {
+                String columnNames = "destiny1";
+                for (int i = 1; i < currentSynapseWeights[0].length; i++) columnNames = columnNames.concat(", destiny" + (i + 1));
+                file.append(columnNames.concat("\n"));
+
+                String biasLine = String.valueOf(currentLayerBias[0]);
+                for (int i = 1; i < currentLayerBias.length; i++) biasLine = biasLine.concat(", " + currentLayerBias[i]);
+                file.append(biasLine.concat("\n"));
+
+                for (double[] currentSynapseWeight : currentSynapseWeights)
+                {
+                    String weightsLine = String.valueOf(currentSynapseWeight[0]);
+
+                    for (int j = 1; j < currentSynapseWeights[0].length; j++)
+                    {
+                        weightsLine = weightsLine.concat(", " + currentSynapseWeight[j]);
+                    }
+
+                    file.append(weightsLine.concat("\n"));
+                }
+
+                file.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            currentIndex++;
+            currentSynapseWeights = neuralNetwork.getSynapseWeights(currentIndex);
+            currentLayerBias = neuralNetwork.getSynapseDestinyLayerBias(currentIndex);
+        }
     }
 
     public void exportErrorsFile(String fileName)
     {
+        FileWriter file = createFile(fileName);
 
+        try {
+            assert file != null;
+            file.append("testError, validateError\n");
+
+            for (int i = 0; i < trainingEpochResultsList.size(); i++)
+            {
+                file.append(String.valueOf(trainingEpochResultsList.get(i).getErrorsMean())).append(", ").append(String.valueOf(validationEpochResultsList.get(i).getErrorsMean())).append("\n");
+            }
+
+            file.close();
+        }
+        catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exportOutputsFile(String fileName)
     {
+        FileWriter file = createFile(fileName);
 
     }
 
-    // Este método cria o arquivo CSV na pasta de results. O nome
-    // do arquivo indica qual a estrutura da rede neural, ou seja,
-    // quantos neurônios existem em cada camada.
-    private void createCSVFile()
+
+    private FileWriter createFile(String fileName)
     {
         try {
-            epochResultsCSVFile = new FileWriter( "results" + File.separator + "EpochResultForNeuralNetwork-" + neuralNetwork.getNeuronsByLayerLabel() + ".csv");
-            epochResultsCSVFile.append("testError, validateError\n");
+            return new FileWriter("results" + File.separator + fileName);
         }
         catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

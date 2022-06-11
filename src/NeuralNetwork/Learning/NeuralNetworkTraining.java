@@ -20,14 +20,6 @@ public class NeuralNetworkTraining
     private final Dataset dataset;
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
-    private boolean writeResultsOnCSVFileEnabled = false;
-
-    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataset, boolean writeResultsOnCSVFileEnabled)
-    {
-        this.neuralNetwork = neuralNetwork;
-        this.dataset = dataset;
-        this.writeResultsOnCSVFileEnabled = writeResultsOnCSVFileEnabled;
-    }
 
     public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataset)
     {
@@ -49,7 +41,7 @@ public class NeuralNetworkTraining
     // exporta um arquivo CSV para cada época, com erro de teste e validação.
     public void start(int numberOfEpoch)
     {
-        resultManager = new ResultManager(neuralNetwork, writeResultsOnCSVFileEnabled);
+        resultManager = new ResultManager(neuralNetwork);
         neuralNetwork.setAllWeightsAndBiasRandomly();
 
         for (int i = 0; i < numberOfEpoch; i++)
@@ -83,8 +75,6 @@ public class NeuralNetworkTraining
 
             if (stopOnNextEpoch) break;
         }
-
-        if (writeResultsOnCSVFileEnabled) resultManager.fillTrainingAndValidationErrorsCSVFile();
     }
 
     // Este método retorna a rede neural.
