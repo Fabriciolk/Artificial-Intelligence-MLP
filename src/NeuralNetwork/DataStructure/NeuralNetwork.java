@@ -145,6 +145,8 @@ public class NeuralNetwork
         return synapticList.get(index).getDestinyLayerBias(isInitialBias);
     }
 
+    // Este método retorna a função de ativação utilizada
+    // por uma determinada camada.
     public String getLayerActivationFunction(int index)
     {
         if (index < 0 || index >= layerList.size()) return null;

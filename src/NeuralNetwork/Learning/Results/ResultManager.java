@@ -40,6 +40,7 @@ public class ResultManager
         validationEpochResultsList.add(epochResult);
     }
 
+    // Este método gera um arquivo contendo os parâmetros da rede neural.
     public void exportNeuralNetworkParametersFile(String fileName, NeuralNetworkTraining neuralNetworkTraining)
     {
         FileWriter file = createFile(fileName);
@@ -63,6 +64,9 @@ public class ResultManager
         }
     }
 
+    // Este método gera um arquivo contendo os pesos e bias
+    // da rede neural, tendo como opção gerar os iniciais
+    // ou não.
     public void exportWeightsAndBiasFile(String fileName, boolean isInitial)
     {
         int currentIndex = 0;
@@ -108,6 +112,8 @@ public class ResultManager
         }
     }
 
+    // Este método gera um arquivo contendo os erros cometidos
+    // pela rede neural a cada época.
     public void exportErrorsFile(String fileName)
     {
         FileWriter file = createFile(fileName);
@@ -128,6 +134,8 @@ public class ResultManager
         }
     }
 
+    // Este método gera um arquivo contendo os dados do dataset de
+    // teste e a respectiva saída da rede neural para cada um deles.
     public void exportOutputsFile(String fileName, Dataset dataset)
     {
         FileWriter file = createFile(fileName);
@@ -168,7 +176,7 @@ public class ResultManager
         }
     }
 
-
+    // Este método cria um arquivo com determinado nome.
     private FileWriter createFile(String fileName)
     {
         try {
