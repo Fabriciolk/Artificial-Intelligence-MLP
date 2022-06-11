@@ -42,16 +42,11 @@ public class ResultManager
         FileWriter file = createFile(fileName);
     }
 
-    public void exportInitialWeightsFile(String fileName)
-    {
-        FileWriter file = createFile(fileName);
-    }
-
-    public void exportFinalWeightsFile(String fileName)
+    public void exportWeightsAndBiasFile(String fileName, boolean isInitial)
     {
         int currentIndex = 0;
-        double[][] currentSynapseWeights = neuralNetwork.getSynapseWeights(currentIndex);
-        double[] currentLayerBias = neuralNetwork.getSynapseDestinyLayerBias(currentIndex);
+        double[][] currentSynapseWeights = neuralNetwork.getSynapseWeights(currentIndex, isInitial);
+        double[] currentLayerBias = neuralNetwork.getSynapseDestinyLayerBias(currentIndex, isInitial);
 
         while (currentSynapseWeights != null)
         {
@@ -87,8 +82,8 @@ public class ResultManager
             }
 
             currentIndex++;
-            currentSynapseWeights = neuralNetwork.getSynapseWeights(currentIndex);
-            currentLayerBias = neuralNetwork.getSynapseDestinyLayerBias(currentIndex);
+            currentSynapseWeights = neuralNetwork.getSynapseWeights(currentIndex, isInitial);
+            currentLayerBias = neuralNetwork.getSynapseDestinyLayerBias(currentIndex, isInitial);
         }
     }
 

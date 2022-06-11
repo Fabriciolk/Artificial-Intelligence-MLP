@@ -129,16 +129,16 @@ public class NeuralNetwork
         for (Synaptic synaptic : synapticList) synaptic.setWeightsAndBiasRandomly();
     }
 
-    public double[][] getSynapseWeights(int index)
+    public double[][] getSynapseWeights(int index, boolean isInitialWeights)
     {
         if (index < 0 || index >= synapticList.size()) return null;
-        return synapticList.get(index).getWeights();
+        return synapticList.get(index).getWeights(isInitialWeights);
     }
 
-    public double[] getSynapseDestinyLayerBias(int index)
+    public double[] getSynapseDestinyLayerBias(int index, boolean isInitialBias)
     {
         if (index < 0 || index >= synapticList.size()) return null;
-        return synapticList.get(index).getDestinyLayerBias();
+        return synapticList.get(index).getDestinyLayerBias(isInitialBias);
     }
 
     // Este método altera todos os pesos e bias para 0.

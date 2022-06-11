@@ -34,8 +34,8 @@ public class Main
         neuralNetworkTraining.start(1700);
 
         neuralNetworkTraining.getResultManager().exportNeuralNetworkParametersFile("MLPParameters.txt");
-        neuralNetworkTraining.getResultManager().exportInitialWeightsFile("initialWeights.csv");
-        neuralNetworkTraining.getResultManager().exportFinalWeightsFile("finalWeights.csv");
+        neuralNetworkTraining.getResultManager().exportWeightsAndBiasFile("initialWeights.csv", true);
+        neuralNetworkTraining.getResultManager().exportWeightsAndBiasFile("finalWeights.csv", false);
         neuralNetworkTraining.getResultManager().exportErrorsFile("errorsByEpoch.csv");
         neuralNetworkTraining.getResultManager().exportOutputsFile("outputs.txt");
 

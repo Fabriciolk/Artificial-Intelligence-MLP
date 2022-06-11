@@ -109,21 +109,26 @@ public class Synaptic
         return correctionErrorsForOriginLayer;
     }
 
-    public double[][] getWeights()
+    public double[][] getWeights(boolean isInitial)
     {
         double[][] weightsCopy = new double[weights.length][weights[0].length];
 
-        for (int i = 0; i < weights.length; i++) {
-            System.arraycopy(weights[i], 0, weightsCopy[i], 0, weights[i].length);
+        for (int i = 0; i < weights.length; i++)
+        {
+            if (isInitial) System.arraycopy(initialWeights[i], 0, weightsCopy[i], 0, initialWeights[i].length);
+            else System.arraycopy(weights[i], 0, weightsCopy[i], 0, weights[i].length);
         }
 
         return weightsCopy;
     }
 
-    public double[] getDestinyLayerBias()
+    public double[] getDestinyLayerBias(boolean isInitial)
     {
         double[] biasCopy = new double[destinyLayerBias.length];
-        System.arraycopy(destinyLayerBias, 0, biasCopy, 0, destinyLayerBias.length);
+
+        if (isInitial) System.arraycopy(initialDestinyLayerBias, 0, biasCopy, 0, initialDestinyLayerBias.length);
+        else System.arraycopy(destinyLayerBias, 0, biasCopy, 0, destinyLayerBias.length);
+
         return biasCopy;
     }
 
