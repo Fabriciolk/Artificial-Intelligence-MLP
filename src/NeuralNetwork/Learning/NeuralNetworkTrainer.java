@@ -9,7 +9,7 @@ import NeuralNetwork.Learning.Results.ResultManager;
 
 import Exception.InvalidLearningRateException;
 
-public class NeuralNetworkTraining
+public class NeuralNetworkTrainer
 {
     /*
     *  Esta classe é responsável por treinar uma rede neural.
@@ -21,7 +21,7 @@ public class NeuralNetworkTraining
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
 
-    public NeuralNetworkTraining(NeuralNetwork neuralNetwork, Dataset dataset)
+    public NeuralNetworkTrainer(NeuralNetwork neuralNetwork, Dataset dataset)
     {
         this.neuralNetwork = neuralNetwork;
         this.dataset = dataset;

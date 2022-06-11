@@ -3,7 +3,7 @@ package NeuralNetwork.Learning.Results;
 import NeuralNetwork.Data.Data;
 import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.NeuralNetwork;
-import NeuralNetwork.Learning.NeuralNetworkTraining;
+import NeuralNetwork.Learning.NeuralNetworkTrainer;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -41,7 +41,7 @@ public class ResultManager
     }
 
     // Este método gera um arquivo contendo os parâmetros da rede neural.
-    public void exportNeuralNetworkParametersFile(String fileName, NeuralNetworkTraining neuralNetworkTraining)
+    public void exportNeuralNetworkParametersFile(String fileName, NeuralNetworkTrainer neuralNetworkTrainer)
     {
         FileWriter file = createFile(fileName);
         assert file != null;
@@ -55,7 +55,7 @@ public class ResultManager
             }
             file.append("\n");
             file.append(String.format("Number of Epochs: %d\n", trainingEpochResultsList.size()));
-            file.append(String.format("Learning rate: %.2f\n", neuralNetworkTraining.getLearningRate()));
+            file.append(String.format("Learning rate: %.2f\n", neuralNetworkTrainer.getLearningRate()));
 
             file.close();
         }
