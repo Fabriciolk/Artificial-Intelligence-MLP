@@ -2,6 +2,7 @@ package NeuralNetwork.DataStructure;
 
 import NeuralNetwork.Data.Data;
 import NeuralNetwork.Data.Dataset;
+import Utilities.Statistic;
 
 import java.util.ArrayList;
 
@@ -42,8 +43,9 @@ public class NeuralNetwork
 
     // Este método retorna a quantidade de acertos que a rede neural
     // atingiu utilizando como teste todos os dados do dataset forne-
-    // cido.
-    public int countRightAnswers(Dataset dataset, double threshold)
+    // cido. A classe correspondente à resposta da rede neural é baseada
+    // no maior valor de saída.
+    public int countRightAnswers(Dataset dataset)
     {
         dataset.resetTrainingDataRead();
         int count = 0;
@@ -54,24 +56,7 @@ public class NeuralNetwork
             getInputLayer().setInputs(dataToTest.getData());
             makeAllSynapse();
             double[] MPLOutput = getOutputLayer().getOutputs();
-
-            count++;
-            for (int j = 0; j < MPLOutput.length; j++)
-            {
-                if (MPLOutput[j] >= threshold)
-                {
-                    MPLOutput[j] = 1;
-                }
-                else
-                {
-                    MPLOutput[j] = 0;
-                }
-                if (MPLOutput[j] != dataToTest.getClassData()[j])
-                {
-                    count--;
-                    break;
-                }
-            }
+            if (Statistic.getIndexMax(MPLOutput) == Statistic.getIndexMax(dataToTest.getClassData())) count++;
         }
 
         dataset.resetTrainingDataRead();

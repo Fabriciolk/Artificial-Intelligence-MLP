@@ -20,7 +20,7 @@ public class Main
     public static void main(String[] args)
     {
         neuralNetwork = new NeuralNetwork(63);
-        neuralNetwork.addLayer(new Layer(225, new SigmoidFunction()));
+        neuralNetwork.addLayer(new Layer(25, new SigmoidFunction()));
         neuralNetwork.addLayer(new Layer(7, new SigmoidFunction()));
 
         datasetToTrain = new CharactersDataset(fileTrainPath, 0.0, neuralNetwork.getInputLayer().getNeurons().length, neuralNetwork.getOutputLayer().getNeurons().length);
@@ -37,6 +37,6 @@ public class Main
         neuralNetworkTrainer.getResultManager().exportOutputsFile("outputs.txt", datasetToTest);
         neuralNetworkTrainer.getResultManager().exportConfusionMatrixFile("confusionMatrix.csv", datasetToTest);
 
-        System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest, 0.5), datasetToTest.getNumberOfDataForTraining());
+        System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest), datasetToTest.getNumberOfDataForTraining());
     }
 }
