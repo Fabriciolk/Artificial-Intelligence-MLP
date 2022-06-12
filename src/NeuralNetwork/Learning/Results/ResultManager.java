@@ -4,6 +4,7 @@ import NeuralNetwork.Data.Data;
 import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 import NeuralNetwork.Learning.NeuralNetworkTrainer;
+import Utilities.Statistic;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -166,6 +167,46 @@ public class ResultManager
                 file.append("\n\n");
 
                 currentData++;
+            }
+
+            dataset.resetTrainingDataRead();
+            file.close();
+        }
+        catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportConfusionMatrixFile(String fileName, Dataset dataset)
+    {
+        FileWriter file = createFile(fileName);
+        double[][] confusionMatrix = new double[dataset.getClassDataLength()][dataset.getClassDataLength()];
+        dataset.resetTrainingDataRead();
+
+        // fill confusion matrix based on neural network answers.
+        while (!dataset.gotAllTrainingData())
+        {
+            Data data = dataset.getNextTrainingData();
+            neuralNetwork.getInputLayer().setInputs(data.getData());
+            neuralNetwork.makeAllSynapse();
+            double[] output = neuralNetwork.getOutputLayer().getOutputs();
+            confusionMatrix[Statistic.getIndexMax(data.getClassData())][Statistic.getIndexMax(output)]++;
+        }
+
+        try {
+            assert file != null;
+            file.append("A, B, C, D, E, J, K\n");
+
+            for (int i = 0; i < confusionMatrix.length; i++)
+            {
+                String line = String.valueOf(confusionMatrix[i][0]);
+
+                for (int j = 1; j < confusionMatrix[0].length; j++)
+                {
+                    line = line.concat(", " + confusionMatrix[i][j]);
+                }
+
+                file.append(line.concat("\n"));
             }
 
             dataset.resetTrainingDataRead();

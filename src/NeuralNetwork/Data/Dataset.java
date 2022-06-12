@@ -10,13 +10,15 @@ public interface Dataset
 
     boolean gotAllValidationData();
 
+    int getClassDataLength();
+
     void resetTrainingDataRead();
 
     void resetValidationDataRead();
 
     void shuffleAll();
 
-    int getDataLength();
+    int getNumberOfDataForTraining();
 
     String dataRepresentation();
 }

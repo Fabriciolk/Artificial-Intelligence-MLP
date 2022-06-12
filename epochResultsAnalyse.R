@@ -17,6 +17,7 @@ for (fileName in fileName_list)
              xlab("Época") + 
              ylab("Erro quadrático médio") +
              geom_point(size = 1, color = "red") + 
+             geom_line() +
              geom_point(y = epoch_Results_DataFrame[, 2], size = 1, color = "blue") + 
              ggtitle(fileName) + 
              scale_x_continuous(n.breaks = 12) + 

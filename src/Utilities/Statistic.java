@@ -16,6 +16,29 @@ public class Statistic
         return sum / values.length;
     }
 
+    public static double getMax(double[] values)
+    {
+        if (values.length == 0) new Exception().printStackTrace();
+        return values[getIndexMax(values)];
+    }
+
+    public static int getIndexMax(double[] values)
+    {
+        int index = 0;
+        double max = values[0];
+
+        for (int i = 0; i < values.length; i++)
+        {
+            if (values[i] > max)
+            {
+                max = values[i];
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
     public static double getVariance(double[] values)
     {
         double mean = getMean(values);

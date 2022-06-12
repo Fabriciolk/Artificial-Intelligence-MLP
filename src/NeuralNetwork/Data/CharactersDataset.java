@@ -17,11 +17,13 @@ public class CharactersDataset implements Dataset
     private final Random random = new Random();
     private final List<Data> trainingDataList = new LinkedList<>();
     private final List<Data> validationDataList = new LinkedList<>();
+    private int answerLength;
     private int numberOfTrainingDataRead = 0;
     private int numberOfValidationDataRead = 0;
 
     public CharactersDataset(String fileName, double validationDataPercent, int dataLength, int answerLength)
     {
+        this.answerLength = answerLength;
         if (validationDataPercent < 0.0 || validationDataPercent > 1.0) return;
 
         try{
@@ -107,8 +109,14 @@ public class CharactersDataset implements Dataset
 
     // Este método retorna a quantidade de dados para treinamento (não inclui os de validação)
     @Override
-    public int getDataLength() {
+    public int getNumberOfDataForTraining() {
         return trainingDataList.size();
+    }
+
+    // Retorna a dimensao do vetor da classe do dado
+    @Override
+    public int getClassDataLength() {
+        return answerLength;
     }
 
     // Este método retorna uma string representando a classificação dos dados.

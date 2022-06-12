@@ -100,13 +100,7 @@ public class NeuralNetworkTrainer
     // Este método altera a taxa de aprendizagem.
     public void setLearningRate(double rate)
     {
-        try {
-            if (rate <= 0 || rate > 1) throw new InvalidLearningRateException(rate);
-        }
-        catch (InvalidLearningRateException e)
-        {
-            e.printStackTrace();
-        }
+        if (rate <= 0 || rate > 1) new InvalidLearningRateException(rate).printStackTrace();
         learningRate = rate;
     }
 

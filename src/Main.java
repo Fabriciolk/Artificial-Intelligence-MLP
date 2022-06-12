@@ -35,7 +35,8 @@ public class Main
         neuralNetworkTrainer.getResultManager().exportWeightsAndBiasFile("finalWeights.csv", false);
         neuralNetworkTrainer.getResultManager().exportErrorsFile("errorsByEpoch.csv");
         neuralNetworkTrainer.getResultManager().exportOutputsFile("outputs.txt", datasetToTest);
+        neuralNetworkTrainer.getResultManager().exportConfusionMatrixFile("confusionMatrix.csv", datasetToTest);
 
-        System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest, 0.5), datasetToTest.getDataLength());
+        System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest, 0.5), datasetToTest.getNumberOfDataForTraining());
     }
 }
