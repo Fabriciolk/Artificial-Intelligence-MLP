@@ -76,25 +76,25 @@ public class ResultManager
 
         while (currentSynapseWeights != null)
         {
-            FileWriter file = createFile(new StringBuilder(fileName).insert(fileName.lastIndexOf('.'), currentIndex + 1).toString());
+            FileWriter file = createFile("table" + File.separator + new StringBuilder(fileName).insert(fileName.lastIndexOf('.'), currentIndex + 1));
             assert file != null;
 
             try {
-                String columnNames = "destiny1";
-                for (int i = 1; i < currentSynapseWeights[0].length; i++) columnNames = columnNames.concat(", destiny" + (i + 1));
+                String columnNames = "src, Destiny_1";
+                for (int i = 1; i < currentSynapseWeights[0].length; i++) columnNames = columnNames.concat(", Destiny_" + (i + 1));
                 file.append(columnNames.concat("\n"));
 
-                String biasLine = String.valueOf(currentLayerBias[0]);
+                String biasLine = "Bias, ".concat(String.valueOf(currentLayerBias[0]));
                 for (int i = 1; i < currentLayerBias.length; i++) biasLine = biasLine.concat(", " + currentLayerBias[i]);
                 file.append(biasLine.concat("\n"));
 
-                for (double[] currentSynapseWeight : currentSynapseWeights)
+                for (int i = 0; i < currentSynapseWeights.length; i++)
                 {
-                    String weightsLine = String.valueOf(currentSynapseWeight[0]);
+                    String weightsLine = "Origin_".concat(String.valueOf(i+1)).concat(", ").concat(String.valueOf(currentSynapseWeights[i][0]));
 
                     for (int j = 1; j < currentSynapseWeights[0].length; j++)
                     {
-                        weightsLine = weightsLine.concat(", " + currentSynapseWeight[j]);
+                        weightsLine = weightsLine.concat(", " + currentSynapseWeights[i][j]);
                     }
 
                     file.append(weightsLine.concat("\n"));
@@ -179,7 +179,7 @@ public class ResultManager
 
     public void exportConfusionMatrixFile(String fileName, Dataset dataset)
     {
-        FileWriter file = createFile(fileName);
+        FileWriter file = createFile("table" + File.separator +fileName);
         double[][] confusionMatrix = new double[dataset.getClassDataLength()][dataset.getClassDataLength()];
         dataset.resetTrainingDataRead();
 
@@ -193,13 +193,17 @@ public class ResultManager
             confusionMatrix[Statistic.getIndexMax(data.getClassData())][Statistic.getIndexMax(output)]++;
         }
 
+        String[] classes = {"A", "B", "C", "D", "E", "J", "K"};
+
         try {
             assert file != null;
-            file.append("A, B, C, D, E, J, K\n");
+            String columnNamesLine = "";
+            for (int i = 0; i < classes.length; i++) columnNamesLine = columnNamesLine.concat(", Got_").concat(classes[i]);
+            file.append(columnNamesLine.concat("\n"));
 
             for (int i = 0; i < confusionMatrix.length; i++)
             {
-                String line = String.valueOf(confusionMatrix[i][0]);
+                String line = "Should_Be_".concat(classes[i]).concat(", ").concat(String.valueOf(confusionMatrix[i][0]));
 
                 for (int j = 1; j < confusionMatrix[0].length; j++)
                 {
