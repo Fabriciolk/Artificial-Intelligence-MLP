@@ -41,9 +41,11 @@ public class Main
         System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest), datasetToTest.getNumberOfDataForTraining());
 
         try {
-            Runtime.getRuntime().exec("R" + File.separator + "R-4.1.1" + File.separator + "bin" + File.separator + "Rscript.exe imageGenerator.R");
-            System.out.println("R script is running... Go to image folder to check if R generated all 6 files.");
-        } catch (IOException e) {
+            Process RProcess = Runtime.getRuntime().exec("R" + File.separator + "R-4.1.1" + File.separator + "bin" + File.separator + "Rscript.exe imageGenerator.R");
+            System.out.println("Executing R script...");
+            RProcess.waitFor();
+            System.out.println("Finished.");
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
