@@ -6,6 +6,7 @@ import NeuralNetwork.DataStructure.NeuralNetwork;
 import NeuralNetwork.Learning.NeuralNetworkTrainer;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Main
 {
@@ -38,5 +39,12 @@ public class Main
         neuralNetworkTrainer.getResultManager().exportConfusionMatrixFile("confusionMatrix.csv", datasetToTest);
 
         System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest), datasetToTest.getNumberOfDataForTraining());
+
+        try {
+            Runtime.getRuntime().exec("R" + File.separator + "R-4.1.1" + File.separator + "bin" + File.separator + "Rscript.exe imageGenerator.R");
+            System.out.println("R script is running... Go to image folder to check if R generated all 6 files.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
