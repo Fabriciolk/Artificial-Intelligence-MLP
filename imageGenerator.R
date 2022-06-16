@@ -15,6 +15,7 @@ folderTableName <- "table"
 fileName_list_forPlot <- list.files(path = paste(folderName, .Platform$file.sep, sep = ""), pattern = ".csv")
 fileName_list_forTable <- list.files(path = paste(folderName, .Platform$file.sep, folderTableName, .Platform$file.sep,sep = ""), pattern = ".csv")
 
+pdf(NULL)
 
 for (fileName in fileName_list_forPlot)
 {
