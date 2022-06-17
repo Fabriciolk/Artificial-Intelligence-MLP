@@ -44,7 +44,7 @@ public class Main
             Process RProcess = Runtime.getRuntime().exec("R" + File.separator + "R-4.1.1" + File.separator + "bin" + File.separator + "Rscript.exe imageGenerator.R");
             System.out.println("Executing R script...");
             RProcess.waitFor();
-            System.out.println("Finished.");
+            System.out.println("Finished R script execution. Check 'images' folder.");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
