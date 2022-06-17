@@ -76,7 +76,7 @@ public class ResultManager
 
         while (currentSynapseWeights != null)
         {
-            FileWriter file = createFile("table" + File.separator + new StringBuilder(fileName).insert(fileName.lastIndexOf('.'), currentIndex + 1));
+            FileWriter file = createFile("table" + File.separator + new StringBuilder(fileName).insert(fileName.lastIndexOf('.'), String.format("_%d", currentIndex + 1)));
             assert file != null;
 
             try {

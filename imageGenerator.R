@@ -47,7 +47,7 @@ for (fileName in fileName_list_forTable)
     if (current_dataframe[1, 1] == "Bias")
     {
         title <- "Weights and Bias"
-        subtitle <- " "
+        subtitle <- paste("Synapse ", strsplit(strsplit(fileName, split = "_")[[1]][2], split = ".csv")[[1]][1], sep = "")
     }
     else if (grepl("Should_Be", current_dataframe[1, 1], fixed = TRUE))
     {
