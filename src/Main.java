@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main
 {
     public static String fileTrainPath = "dataset" + File.separator + "caracteres-limpo.csv";
-    public static String fileTestPath = "dataset" + File.separator + "caracteres-ruido.csv";
+    public static String fileTestPath = "dataset" + File.separator + "caracteres_ruido20.csv";
 
     public static NeuralNetwork neuralNetwork;
     public static NeuralNetworkTrainer neuralNetworkTrainer;

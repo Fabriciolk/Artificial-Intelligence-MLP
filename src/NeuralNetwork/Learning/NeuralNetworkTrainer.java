@@ -8,6 +8,7 @@ import NeuralNetwork.Learning.Results.EpochResult;
 import NeuralNetwork.Learning.Results.ResultManager;
 
 import Exception.InvalidLearningRateException;
+import Utilities.Output;
 
 public class NeuralNetworkTrainer
 {
@@ -46,6 +47,7 @@ public class NeuralNetworkTrainer
 
         for (int i = 0; i < numberOfEpoch; i++)
         {
+            if ((i + 1) % 100 == 0) System.out.println("<<< Running epoch " + (i + 1) + " >>>");
             dataset.resetTrainingDataRead();
             dataset.resetValidationDataRead();
             dataset.shuffleAll();

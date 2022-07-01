@@ -21,6 +21,7 @@ public class ResultManager
     private final LinkedList<EpochResult> trainingEpochResultsList = new LinkedList<>();
     private final LinkedList<EpochResult> validationEpochResultsList = new LinkedList<>();
     private final NeuralNetwork neuralNetwork;
+    private double[][] confusionMatrix;
 
     public ResultManager(NeuralNetwork neuralNetwork)
     {
@@ -180,9 +181,11 @@ public class ResultManager
     public void exportConfusionMatrixFile(String fileName, Dataset dataset)
     {
         FileWriter file = createFile("table" + File.separator +fileName);
-        double[][] confusionMatrix = new double[dataset.getClassDataLength()][dataset.getClassDataLength()];
-        dataset.resetTrainingDataRead();
 
+        double[][] confusionMatrix = new double[dataset.getClassDataLength()][dataset.getClassDataLength()];
+        this.confusionMatrix = confusionMatrix;
+
+        dataset.resetTrainingDataRead();
         // fill confusion matrix based on neural network answers.
         while (!dataset.gotAllTrainingData())
         {
