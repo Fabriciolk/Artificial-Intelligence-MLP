@@ -4,7 +4,7 @@ public class ConfusionMatrix
 {
     int[][] confusionMatrix;
 
-    ConfusionMatrix(int[][] confusionMatrix)
+    public ConfusionMatrix(int[][] confusionMatrix)
     {
         this.confusionMatrix = confusionMatrix;
     }
@@ -46,7 +46,7 @@ public class ConfusionMatrix
 
         for (int i = 0; i < confusionMatrix.length; i++)
         {
-            for (int j = 0; j < confusionMatrix[i].length; j++)
+            for (int j = 0; j < confusionMatrix[0].length; j++)
             {
                 if (i == index || j == index) continue;
                 sum += confusionMatrix[i][j];

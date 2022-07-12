@@ -4,7 +4,7 @@ public class Avaliation
 {
     ConfusionMatrix confusionMatrix;
 
-    Avaliation (ConfusionMatrix confusionMatrix)
+    public Avaliation(ConfusionMatrix confusionMatrix)
     {
         this.confusionMatrix = confusionMatrix;
     }
@@ -47,5 +47,17 @@ public class Avaliation
     public double getFalseFindRate(int index)
     {
         return (confusionMatrix.getFalsePositive(index) * 1.0) / (confusionMatrix.getTruePositive(index) + confusionMatrix.getFalsePositive(index));
+    }
+
+    public void printAllMetrics(int index)
+    {
+        System.out.println("Error: " + getAccuracy(index));
+        System.out.println("Accuracy: " + getError(index));
+        System.out.println("Sensibility: " + getSensibility(index));
+        System.out.println("False positive rate: " + getFalsePositiveRate(index));
+        System.out.println("Specificity: " + getSpecificity(index));
+        System.out.println("Precision: " + getPrecision(index));
+        System.out.println("Negative Predictability: " + getNegativePredictability(index));
+        System.out.println("False Find Rate: " + getFalseFindRate(index));
     }
 }

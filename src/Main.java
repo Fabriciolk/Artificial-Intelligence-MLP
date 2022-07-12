@@ -4,6 +4,8 @@ import NeuralNetwork.Data.Dataset;
 import NeuralNetwork.DataStructure.Layer;
 import NeuralNetwork.DataStructure.NeuralNetwork;
 import NeuralNetwork.Learning.NeuralNetworkTrainer;
+import NeuralNetwork.Learning.Results.Avaliation;
+import NeuralNetwork.Learning.Results.ConfusionMatrix;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +40,17 @@ public class Main
         neuralNetworkTrainer.getResultManager().exportOutputsFile("outputs.txt", datasetToTest);
         neuralNetworkTrainer.getResultManager().exportConfusionMatrixFile("confusionMatrix.csv", datasetToTest);
 
-        System.out.printf("Got %d/%d right answers\n", neuralNetwork.countRightAnswers(datasetToTest), datasetToTest.getNumberOfDataForTraining());
+        System.out.printf("\nGot %d/%d right answers\n\n", neuralNetwork.countRightAnswers(datasetToTest), datasetToTest.getNumberOfDataForTraining());
 
+        Avaliation avaliation = new Avaliation(new ConfusionMatrix(neuralNetworkTrainer.getResultManager().getConfusionMatrix()));
+        for (int i = 0; i < neuralNetwork.getOutputLayer().getNeurons().length; i++)
+        {
+            System.out.println("<<< Avaliation for class " + datasetToTrain.classNameByIndex(i) + " >>>");
+            avaliation.printAllMetrics(i);
+            System.out.println("-------------\\\\--------------");
+        }
+
+        System.out.println("");
         try {
             Process RProcess = Runtime.getRuntime().exec("R" + File.separator + "R-4.1.1" + File.separator + "bin" + File.separator + "Rscript.exe imageGenerator.R");
             System.out.println("Executing R script...");

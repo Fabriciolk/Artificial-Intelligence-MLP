@@ -21,7 +21,7 @@ public class ResultManager
     private final LinkedList<EpochResult> trainingEpochResultsList = new LinkedList<>();
     private final LinkedList<EpochResult> validationEpochResultsList = new LinkedList<>();
     private final NeuralNetwork neuralNetwork;
-    private double[][] confusionMatrix;
+    private int[][] confusionMatrix;
 
     public ResultManager(NeuralNetwork neuralNetwork)
     {
@@ -182,7 +182,7 @@ public class ResultManager
     {
         FileWriter file = createFile("table" + File.separator +fileName);
 
-        double[][] confusionMatrix = new double[dataset.getClassDataLength()][dataset.getClassDataLength()];
+        int[][] confusionMatrix = new int[dataset.getClassDataLength()][dataset.getClassDataLength()];
         this.confusionMatrix = confusionMatrix;
 
         dataset.resetTrainingDataRead();
@@ -234,5 +234,9 @@ public class ResultManager
             e.printStackTrace();
             return null;
         }
+    }
+
+    public int[][] getConfusionMatrix() {
+        return confusionMatrix;
     }
 }

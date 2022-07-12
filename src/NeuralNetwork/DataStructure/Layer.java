@@ -30,7 +30,7 @@ public class Layer
         for (int i = 0; i < neurons.length; i++) neurons[i] = new Neuron(activationFunction);
     }
 
-    Layer (int neuronAmount)
+    Layer (int neuronAmount) // constroi input layer
     {
         neurons = new Neuron[neuronAmount];
         isEntryLayer = true;

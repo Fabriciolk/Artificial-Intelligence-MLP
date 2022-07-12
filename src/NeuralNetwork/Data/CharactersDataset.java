@@ -15,9 +15,10 @@ public class CharactersDataset implements Dataset
     * */
 
     private final Random random = new Random();
+    private final String[] classes = {"A", "B", "C", "D", "E", "J", "K"};
     private final List<Data> trainingDataList = new LinkedList<>();
     private final List<Data> validationDataList = new LinkedList<>();
-    private int answerLength;
+    private final int answerLength;
     private int numberOfTrainingDataRead = 0;
     private int numberOfValidationDataRead = 0;
 
@@ -60,6 +61,11 @@ public class CharactersDataset implements Dataset
      **      Public Methods     **
      **                         **
     \*****************************/
+
+    @Override
+    public String classNameByIndex(int index) {
+        return classes[index];
+    }
 
     // Este método retorna um dado de treinamento.
     @Override
