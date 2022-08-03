@@ -1,6 +1,0 @@
-Layer 1: 63 neurons; Activation function: null
-Layer 2: 25 neurons; Activation function: Sigmoid Function
-Layer 3: 7 neurons; Activation function: Sigmoid Function
-
-Number of Epochs: 1700
-Learning rate: 0,50
