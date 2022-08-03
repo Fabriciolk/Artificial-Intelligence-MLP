@@ -5,6 +5,7 @@ import NeuralNetwork.Data.Dataset;
 import Utilities.Statistic;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class NeuralNetwork
 {
@@ -26,8 +27,8 @@ public class NeuralNetwork
     * */
 
     private final int MINIMUM_NEURON_BY_LAYER = 1;
-    private ArrayList<Layer> layerList = new ArrayList<>();
-    private ArrayList<Synaptic> synapticList = new ArrayList<>();
+    private final ArrayList<Layer> layerList = new ArrayList<>();
+    private final ArrayList<Synaptic> synapticList = new ArrayList<>();
 
     public NeuralNetwork(int neuronAmountOnInputLayer)
     {
@@ -47,52 +48,47 @@ public class NeuralNetwork
     // no maior valor de saída.
     public int countRightAnswers(Dataset dataset)
     {
-        dataset.resetTrainingDataRead();
         int count = 0;
 
-        while (!dataset.gotAllTrainingData())
+        for (Iterator<Data> it = dataset.getIterator(); it.hasNext(); )
         {
-            Data dataToTest = dataset.getNextTrainingData();
+            Data dataToTest = it.next();
             getInputLayer().setInputs(dataToTest.getData());
             makeAllSynapse();
             double[] MPLOutput = getOutputLayer().getOutputs();
             if (Statistic.getIndexMax(MPLOutput) == Statistic.getIndexMax(dataToTest.getClassData())) count++;
         }
 
-        dataset.resetTrainingDataRead();
         return count;
     }
 
     // Este método adiciona uma camada na estrutura
     // de dados, com opção de escolher em qual posi-
     // ção inserir.
-    public boolean addLayer(int index, Layer layer)
+    public void addLayer(int index, Layer layer)
     {
-        if (index < 1 || layer == null || layer.isEntryLayer()) return false;
+        if (index < 1 || layer == null || layer.isEntryLayer()) return;
         layerList.add(index, layer);
         updateSynapticListOnLayerInsertion(index);
-        return true;
     }
 
     // Este método adiciona uma camada na
     // última posição da estrutura de dados.
-    public boolean addLayer(Layer layer)
+    public void addLayer(Layer layer)
     {
-        if (layer == null || layer.isEntryLayer()) return false;
+        if (layer == null || layer.isEntryLayer()) return;
         layerList.add(layer);
         updateSynapticListOnLayerInsertion(layerList.size() - 1);
-        return true;
     }
 
     // Este método remove uma camada na
     // estrutura de dados em uma determi-
     // nada posição.
-    public boolean removeLayer(int index)
+    public void removeLayer(int index)
     {
-        if (index < 1) return false;
+        if (index < 1) throw new IndexOutOfBoundsException();
         layerList.remove(index);
         updateSynapticListOnLayerRemoving(index);
-        return true;
     }
 
     // Este método retorna a camada de entrada
@@ -164,12 +160,6 @@ public class NeuralNetwork
         {
             correctionErrorsFromOutputLayer = synapticList.get(i).adjustWeightsAndBias(learningRate, correctionErrorsFromOutputLayer);
         }
-    }
-
-    // Este método imprime todos os pesos e baias de todas as sinapses.
-    public void printAllLayerWeights()
-    {
-        for (Synaptic synaptic : synapticList) synaptic.printWeightsAndBias();
     }
 
     // Retorna a quantidade de neurônios em cada camada na forma w-x-y-z..., onde

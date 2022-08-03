@@ -9,6 +9,7 @@ import Utilities.Statistic;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class ResultManager
@@ -18,8 +19,7 @@ public class ResultManager
     * e gerar os arquivos de saída adequados.
     * */
 
-    private final LinkedList<EpochResult> trainingEpochResultsList = new LinkedList<>();
-    private final LinkedList<EpochResult> validationEpochResultsList = new LinkedList<>();
+    private final LinkedList<EpochResult> results = new LinkedList<>();
     private final NeuralNetwork neuralNetwork;
     private int[][] confusionMatrix;
 
@@ -28,18 +28,9 @@ public class ResultManager
         this.neuralNetwork = neuralNetwork;
     }
 
-    // Este método adiciona o resultado da época (saída obtida e esperada)
-    // gerado a partir de um dado de treinamento.
-    public void addTrainingEpochResult(EpochResult epochResult)
+    public void addEpochResult(EpochResult epochResult)
     {
-        trainingEpochResultsList.add(epochResult);
-    }
-
-    // Este método adiciona o resultado da época (saída obtida e esperada)
-    // gerado a partir de um dado de validação.
-    public void addValidationEpochResult(EpochResult epochResult)
-    {
-        validationEpochResultsList.add(epochResult);
+        results.add(epochResult);
     }
 
     // Este método gera um arquivo contendo os parâmetros da rede neural.
@@ -56,7 +47,7 @@ public class ResultManager
                 file.append(String.format("Layer %d: %s neurons; Activation function: %s\n", (i + 1), neuronsByLayer[i], neuralNetwork.getLayerActivationFunction(i)));
             }
             file.append("\n");
-            file.append(String.format("Number of Epochs: %d\n", trainingEpochResultsList.size()));
+            file.append(String.format("Number of Epochs: %d\n", results.size()));
             file.append(String.format("Learning rate: %.2f\n", neuralNetworkTrainer.getLearningRate()));
 
             file.close();
@@ -116,7 +107,7 @@ public class ResultManager
 
     // Este método gera um arquivo contendo os erros cometidos
     // pela rede neural a cada época.
-    public void exportErrorsFile(String fileName)
+    public void exportErrorsFile(String fileName, ResultManager validation)
     {
         FileWriter file = createFile(fileName);
 
@@ -124,9 +115,12 @@ public class ResultManager
             assert file != null;
             file.append("testError, validateError\n");
 
-            for (int i = 0; i < trainingEpochResultsList.size(); i++)
+            for (int i = 0; i < results.size(); i++)
             {
-                file.append(String.valueOf(trainingEpochResultsList.get(i).getErrorsMean())).append(", ").append(String.valueOf(validationEpochResultsList.get(i).getErrorsMean())).append("\n");
+                String validationResult;
+                if (validation != null) validationResult = String.valueOf(validation.getResults().get(i).getErrorsMean());
+                else validationResult = "";
+                file.append(String.valueOf(results.get(i).getErrorsMean())).append(", ").append(validationResult).append("\n");
             }
 
             file.close();
@@ -141,17 +135,16 @@ public class ResultManager
     public void exportOutputsFile(String fileName, Dataset dataset)
     {
         FileWriter file = createFile(fileName);
-        dataset.resetTrainingDataRead();
 
         try {
             assert file != null;
             int currentData = 1;
             double[] output;
 
-            while (!dataset.gotAllTrainingData())
+            for (Iterator<Data> it = dataset.getIterator(); it.hasNext(); )
             {
                 file.append("Data ").append(String.valueOf(currentData)).append("\n");
-                Data data = dataset.getNextTrainingData();
+                Data data = it.next();
 
                 // Escreve os valores do dado no arquivo
                 for (int i = 0; i < data.getData().length; i++) file.append(String.valueOf(data.getData()[i])).append("\t");
@@ -170,7 +163,6 @@ public class ResultManager
                 currentData++;
             }
 
-            dataset.resetTrainingDataRead();
             file.close();
         }
         catch (IOException | NullPointerException e) {
@@ -182,14 +174,13 @@ public class ResultManager
     {
         FileWriter file = createFile("table" + File.separator +fileName);
 
-        int[][] confusionMatrix = new int[dataset.getClassDataLength()][dataset.getClassDataLength()];
+        int[][] confusionMatrix = new int[dataset.getDataClasses().length][dataset.getDataClasses().length];
         this.confusionMatrix = confusionMatrix;
 
-        dataset.resetTrainingDataRead();
         // fill confusion matrix based on neural network answers.
-        while (!dataset.gotAllTrainingData())
+        for (Iterator<Data> it = dataset.getIterator(); it.hasNext(); )
         {
-            Data data = dataset.getNextTrainingData();
+            Data data = it.next();
             neuralNetwork.getInputLayer().setInputs(data.getData());
             neuralNetwork.makeAllSynapse();
             double[] output = neuralNetwork.getOutputLayer().getOutputs();
@@ -201,7 +192,7 @@ public class ResultManager
         try {
             assert file != null;
             String columnNamesLine = "";
-            for (int i = 0; i < classes.length; i++) columnNamesLine = columnNamesLine.concat(", Got_").concat(classes[i]);
+            for (String aClass : classes) columnNamesLine = columnNamesLine.concat(", Got_").concat(aClass);
             file.append(columnNamesLine.concat("\n"));
 
             for (int i = 0; i < confusionMatrix.length; i++)
@@ -216,7 +207,6 @@ public class ResultManager
                 file.append(line.concat("\n"));
             }
 
-            dataset.resetTrainingDataRead();
             file.close();
         }
         catch (IOException | NullPointerException e) {
@@ -238,5 +228,9 @@ public class ResultManager
 
     public int[][] getConfusionMatrix() {
         return confusionMatrix;
+    }
+
+    public LinkedList<EpochResult> getResults() {
+        return results;
     }
 }

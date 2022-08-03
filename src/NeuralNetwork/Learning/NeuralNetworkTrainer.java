@@ -8,7 +8,8 @@ import NeuralNetwork.Learning.Results.EpochResult;
 import NeuralNetwork.Learning.Results.ResultManager;
 
 import Exception.InvalidLearningRateException;
-import Utilities.Output;
+
+import java.util.Iterator;
 
 public class NeuralNetworkTrainer
 {
@@ -17,7 +18,8 @@ public class NeuralNetworkTrainer
     * */
 
     private final NeuralNetwork neuralNetwork;
-    private ResultManager resultManager;
+    private ResultManager resultTrainingManager;
+    private ResultManager resultValidationManager;
     private final Dataset dataset;
     private boolean stopOnNextEpoch = false;
     private double learningRate = 0.01;
@@ -40,55 +42,22 @@ public class NeuralNetworkTrainer
     // análise de erro da rede, antes de utilizar o dataset de treina-
     // mento, utiliza também um outro de validação. Além disso, o método
     // exporta um arquivo CSV para cada época, com erro de teste e validação.
+    public void start(int numberOfEpoch, Dataset validationDataset)
+    {
+        start(numberOfEpoch);
+        resultValidationManager = train(numberOfEpoch, "Validation", validationDataset);
+    }
+
     public void start(int numberOfEpoch)
     {
-        resultManager = new ResultManager(neuralNetwork);
         neuralNetwork.setAllWeightsAndBiasRandomly();
-
-        for (int i = 0; i < numberOfEpoch; i++)
-        {
-            if ((i + 1) % 100 == 0) System.out.println("<<< Running epoch " + (i + 1) + " >>>");
-            dataset.resetTrainingDataRead();
-            dataset.resetValidationDataRead();
-            dataset.shuffleAll();
-
-            EpochResult epochToTrain = new EpochResult();
-            EpochResult epochToValidate = new EpochResult();
-
-            while (!dataset.gotAllValidationData())
-            {
-                Data dataToValidate = dataset.getNextValidationData();
-                setDataOnInputLayer(dataToValidate.getData());
-                runFeedforward();
-                epochToValidate.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToValidate.getClassData());
-            }
-
-            while (!dataset.gotAllTrainingData())
-            {
-                Data dataToTrain = dataset.getNextTrainingData();
-                setDataOnInputLayer(dataToTrain.getData());
-                runFeedforward();
-                epochToTrain.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
-                runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), dataToTrain.getClassData());
-            }
-
-            resultManager.addTrainingEpochResult(epochToTrain);
-            resultManager.addValidationEpochResult(epochToValidate);
-
-            if (stopOnNextEpoch) break;
-        }
+        resultTrainingManager = train(numberOfEpoch, "Training", dataset);
     }
 
     // Este método retorna a rede neural.
     public NeuralNetwork getNeuralNetwork()
     {
         return neuralNetwork;
-    }
-
-    // Este método retorna o gerenciador de resultados.
-    public ResultManager getResultManager()
-    {
-        return resultManager;
     }
 
     // Este método define uma parada de treinamento para
@@ -110,6 +79,16 @@ public class NeuralNetworkTrainer
     public double getLearningRate()
     {
         return learningRate;
+    }
+
+    public ResultManager getResultValidationManager() {
+        return resultValidationManager;
+    }
+
+    // Este método retorna o gerenciador de resultados.
+    public ResultManager getResultTrainingManager()
+    {
+        return resultTrainingManager;
     }
 
     /******************************\
@@ -157,5 +136,30 @@ public class NeuralNetworkTrainer
     private void setDataOnInputLayer(double[] data)
     {
         neuralNetwork.getInputLayer().setInputs(data);
+    }
+
+    private ResultManager train(int numberOfEpoch, String type, Dataset dataset)
+    {
+        resultTrainingManager = new ResultManager(neuralNetwork);
+
+        for (int i = 0; i < numberOfEpoch; i++)
+        {
+            EpochResult epochResult = new EpochResult();
+            dataset.shuffle();
+
+            for (Iterator<Data> it = dataset.getIterator(); it.hasNext(); )
+            {
+                Data data = it.next();
+                setDataOnInputLayer(data.getData());
+                runFeedforward();
+                epochResult.registerOutputs(neuralNetwork.getOutputLayer().getOutputs(), data.getClassData());
+                if (!type.equals("Validation")) runBackpropagation(neuralNetwork.getOutputLayer().getOutputs(), data.getClassData());
+            }
+
+            resultTrainingManager.addEpochResult(epochResult);
+            if (stopOnNextEpoch) break;
+        }
+
+        return resultTrainingManager;
     }
 }

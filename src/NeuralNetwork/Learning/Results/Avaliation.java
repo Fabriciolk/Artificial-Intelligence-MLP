@@ -51,8 +51,8 @@ public class Avaliation
 
     public void printAllMetrics(int index)
     {
-        System.out.println("Error: " + getAccuracy(index));
-        System.out.println("Accuracy: " + getError(index));
+        System.out.println("Error: " + getError(index));
+        System.out.println("Accuracy: " + getAccuracy(index));
         System.out.println("Sensibility: " + getSensibility(index));
         System.out.println("False positive rate: " + getFalsePositiveRate(index));
         System.out.println("Specificity: " + getSpecificity(index));

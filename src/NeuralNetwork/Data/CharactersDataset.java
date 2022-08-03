@@ -3,11 +3,12 @@ package NeuralNetwork.Data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class CharactersDataset implements Dataset
+public class CharactersDataset implements TrainingDataset
 {
     /*
     * Esta classe é responsável por fornecer os dados
@@ -15,45 +16,24 @@ public class CharactersDataset implements Dataset
     * */
 
     private final Random random = new Random();
-    private final String[] classes = {"A", "B", "C", "D", "E", "J", "K"};
-    private final List<Data> trainingDataList = new LinkedList<>();
-    private final List<Data> validationDataList = new LinkedList<>();
-    private final int answerLength;
-    private int numberOfTrainingDataRead = 0;
-    private int numberOfValidationDataRead = 0;
+    private String fileName;
+    private final String[] classesRepresentation = {"A", "B", "C", "D", "E", "J", "K"};
+    private List<Data> dataList = new LinkedList<>();
+    private int classDimension;
+    private int dataDimension;
 
-    public CharactersDataset(String fileName, double validationDataPercent, int dataLength, int answerLength)
+    public CharactersDataset(String fileName, int dataDimension, int classDimension)
     {
-        this.answerLength = answerLength;
-        if (validationDataPercent < 0.0 || validationDataPercent > 1.0) return;
+        this.classDimension = classDimension;
+        this.dataDimension = dataDimension;
+        this.fileName = fileName;
 
-        try{
-            // Cria o fluxo e lê a primeira linha do dataset
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-            String line = bufferedReader.readLine();
+        readFile(fileName);
+    }
 
-            while (line != null)
-            {
-                String[] stringValues = line.split(",");
-                double[] data = new double[dataLength];
-                double[] classData = new double[answerLength];
-
-                // Lê o dado e sua classe
-                for (int i = 0; i < data.length; i++) data[i] = Double.parseDouble(removeBOMCharacterIfExists(stringValues[i]));
-                for (int i = 0; i < classData.length; i++) classData[i] = Double.parseDouble(stringValues[data.length + i]);
-
-                // Armazena o dado e sua classe e lê a próxima linha do dataset
-                trainingDataList.add(new Data(data, classData));
-                line = bufferedReader.readLine();
-            }
-
-            // Se necessário, coleta da lista dos dados aqueles destinados para validação
-            collectValidationData(validationDataPercent);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+    public CharactersDataset(List<Data> dataList)
+    {
+        this.dataList = dataList;
     }
 
     /*****************************\
@@ -63,72 +43,38 @@ public class CharactersDataset implements Dataset
     \*****************************/
 
     @Override
-    public String classNameByIndex(int index) {
-        return classes[index];
+    public String[] getDataClasses() {
+        return classesRepresentation;
     }
 
-    // Este método retorna um dado de treinamento.
     @Override
-    public Data getNextTrainingData() {
-        return trainingDataList.get(numberOfTrainingDataRead++);
+    public Iterator<Data> getIterator() {
+        return dataList.iterator();
     }
 
-    // Este método retorna um dado de validação.
     @Override
-    public Data getNextValidationData() {
-        return validationDataList.get(numberOfValidationDataRead++);
+    public int getNumberOfRows() {
+        return dataList.size();
     }
 
-    // Este método determina se todos os dados já forma lidos.
     @Override
-    public boolean gotAllTrainingData() {
-        return numberOfTrainingDataRead + 1 > trainingDataList.size();
+    public int getNumberOfColumns() {
+        return dataDimension + classDimension;
     }
 
-    // Este método zera a quantidade de dados lidos
-    // para que a lista de dados seja lida novamente
     @Override
-    public void resetTrainingDataRead() {
-        numberOfTrainingDataRead = 0;
+    public void shuffle() {
+        shuffleList(dataList);
     }
 
-    // Este método determina se todos os dados já forma lidos.
     @Override
-    public boolean gotAllValidationData() {
-        return numberOfValidationDataRead + 1 > validationDataList.size();
-    }
-
-    // Este método zera a quantidade de dados lidos
-    // para que a lista de dados seja lida novamente
-    @Override
-    public void resetValidationDataRead() {
-        numberOfValidationDataRead = 0;
-    }
-
-    // Este método embaralha aleatoriamente os dados de
-    // treinamento e validação.
-    @Override
-    public void shuffleAll() {
-        shuffleList(trainingDataList);
-        shuffleList(validationDataList);
-    }
-
-    // Este método retorna a quantidade de dados para treinamento (não inclui os de validação)
-    @Override
-    public int getNumberOfDataForTraining() {
-        return trainingDataList.size();
-    }
-
-    // Retorna a dimensao do vetor da classe do dado
-    @Override
-    public int getClassDataLength() {
-        return answerLength;
-    }
-
-    // Este método retorna uma string representando a classificação dos dados.
-    @Override
-    public String dataRepresentation() {
+    public String getTitle() {
         return "Characters A, B, C, D, E, J, K";
+    }
+
+    @Override
+    public Dataset getValidationDataset(double percent) {
+        return new CharactersDataset(collectValidationData(percent));
     }
 
     /******************************\
@@ -137,25 +83,54 @@ public class CharactersDataset implements Dataset
      **                          **
     \******************************/
 
+    private void readFile(String fileName)
+    {
+        try{
+            // Cria o fluxo e lê a primeira linha do dataset
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+            String line = bufferedReader.readLine();
+
+            while (line != null)
+            {
+                String[] stringValues = line.split(",");
+                double[] data = new double[dataDimension];
+                double[] classData = new double[classDimension];
+
+                // Lê o dado e sua classe
+                for (int i = 0; i < data.length; i++) data[i] = Double.parseDouble(removeBOMCharacterIfExists(stringValues[i]));
+                for (int i = 0; i < classData.length; i++) classData[i] = Double.parseDouble(stringValues[data.length + i]);
+
+                // Armazena o dado e sua classe e lê a próxima linha do dataset
+                dataList.add(new Data(data, classData));
+                line = bufferedReader.readLine();
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     // Se parte do dataset for utilizada para validação, ou seja,
     // para análise de overfitting a partir dos erros das épocas,
     // este método reserva a porcentagem fornecida do total dos dados.
-    private void collectValidationData (double validationDataPercent)
+    private List<Data> collectValidationData (double validationDataPercent)
     {
-        for (int i = 0; i < Math.round(trainingDataList.size() * validationDataPercent); i++)
+        List<Data> validationList = new LinkedList<>();
+
+        for (int i = 0; i < Math.round(dataList.size() * validationDataPercent); i++)
         {
-            int randomIndex = random.nextInt(trainingDataList.size());
-            validationDataList.add(trainingDataList.remove(randomIndex));
+            int randomIndex = random.nextInt(dataList.size());
+            validationList.add(dataList.remove(randomIndex));
         }
+
+        return validationList;
     }
 
     // Este método remove o caracter Byte Order Mark e retorna a nova string
     private String removeBOMCharacterIfExists (String string)
     {
-        for (int i = 0; i < string.length(); i++)
-            if ((int)string.charAt(i) == 65279)
-                return string.substring(0, i).concat(string.substring(i + 1));
-
+        string = string.replaceAll("[^-0-1,]", "");
         return string;
     }
 

@@ -1,26 +1,18 @@
 package NeuralNetwork.Data;
 
+import java.util.Iterator;
+
 public interface Dataset
 {
-    String classNameByIndex(int index);
+    String[] getDataClasses();
 
-    Data getNextTrainingData();
+    Iterator<Data> getIterator();
 
-    Data getNextValidationData();
+    int getNumberOfRows();
 
-    boolean gotAllTrainingData();
+    int getNumberOfColumns();
 
-    boolean gotAllValidationData();
+    void shuffle();
 
-    int getClassDataLength();
-
-    void resetTrainingDataRead();
-
-    void resetValidationDataRead();
-
-    void shuffleAll();
-
-    int getNumberOfDataForTraining();
-
-    String dataRepresentation();
+    String getTitle();
 }
