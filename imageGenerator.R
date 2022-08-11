@@ -60,13 +60,15 @@ for (fileName in fileName_list_forTable)
         subtitle <- ""
     }
     
-    max_image_size <- (nrow(current_dataframe) + 1)*80
+    max_image_size <- (nrow(current_dataframe) + 1)*100
     
     print(gt(current_dataframe) %>% 
               tab_header(
                   title = md(title),
                   subtitle = md(subtitle)
               ) %>%
-              gtsave(paste("images", .Platform$file.sep, str_replace(fileName, ".csv", ".png"), sep = ""), vwidth = max_image_size, vheight = max_image_size))
+              gtsave(paste("images", .Platform$file.sep, str_replace(fileName, ".csv", ".png"), sep = ""), 
+                     vwidth = max_image_size, 
+                     vheight = max_image_size))
 }
 

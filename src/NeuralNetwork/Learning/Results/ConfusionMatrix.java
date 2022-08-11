@@ -27,7 +27,7 @@ public class ConfusionMatrix
         return sum;
     }
 
-    public int getTrueNegative(int index)
+    public int getFalseNegative(int index)
     {
         int sum = 0;
 
@@ -40,7 +40,7 @@ public class ConfusionMatrix
         return sum;
     }
 
-    public int getFalseNegative(int index)
+    public int getTrueNegative(int index)
     {
         int sum = 0;
 
